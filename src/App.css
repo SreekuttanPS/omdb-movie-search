@@ -1,0 +1,11 @@
+.hide {
+  display: none !important;
+}
+
+.show {
+  display: inline-block !important;
+}
+
+.card-image {
+  max-height: 365px !important;
+}
