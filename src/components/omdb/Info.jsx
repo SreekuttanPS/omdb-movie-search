@@ -1,46 +1,32 @@
-import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
+import React, { useState, useEffect, useMemo } from "react";
+import { Card, Button, Form } from "react-bootstrap";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import Loader from "../Components/Loader";
 
-export const MovieInfo = () => {
-  const [searchParams] = useSearchParams();
+export default function Info() {
+  let { searchId } = useParams();
   const navigate = useNavigate();
   const [movieInfo, setMovieInfo] = useState();
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (searchParams.get("token")) {
-      detailShow(searchParams.get("token"));
-    }
-  }, []);
+  useMemo(() => {
+    axios
+      .get(
+        "https://www.omdbapi.com/?apikey=522b328&type=movie&plot=full&t=" +
+          searchId
+      )
+      .then((response) => {
+        setMovieInfo(response.data);
+        const timer = setTimeout(() => {}, 1500);
+        return () => clearTimeout(timer);
+      })
+      .catch(function (error) {
+        console.warn(error);
+      });
+  }, [searchId]);
 
-  const detailShow = (imdbID) => {
-    if (imdbID) {
-      setIsLoading(true);
-      axios
-        .get(
-          "https://www.omdbapi.com/?apikey=522b328&type=movie&plot=full&i=" +
-            imdbID
-        )
-        .then((response) => {
-          setMovieInfo(response.data);
-          const timer = setTimeout(() => {
-            setIsLoading(false);
-          }, 1500);
-          return () => clearTimeout(timer);
-        })
-        .catch(function (error) {
-          setErrorMessage("No results found, Please try again");
-        });
-    }
-  };
   return (
-    <>
-      {isLoading ? <Loader /> : null}
+    <div id="contact">
       <div className="container w-100 p-5">
         <Form>
           <h2>{movieInfo?.Title}</h2>
@@ -70,6 +56,6 @@ export const MovieInfo = () => {
           </Button>
         </Form>
       </div>
-    </>
+    </div>
   );
-};
+}
