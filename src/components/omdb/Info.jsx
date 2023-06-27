@@ -12,7 +12,9 @@ export default function Info() {
   useMemo(() => {
     axios
       .get(
-        "https://www.omdbapi.com/?apikey=522b328&type=movie&plot=full&t=" +
+        "https://www.omdbapi.com/?apikey=" +
+          import.meta.env.VITE_API_KEY +
+          "&type=movie&plot=full&t=" +
           searchId
       )
       .then((response) => {

@@ -241,16 +241,16 @@ i {
 
 .grouping {
   flex-wrap: wrap;
-  .errorMsg {
-    color: #cc0033;
-    /* display: inline-block; */
-    font-size: 12px;
-    line-height: 15px;
-    margin: 5px 0 0;
-    width: 100%;
-  }
 }
 
+.grouping .errorMsg {
+  color: #cc0033;
+  /* display: inline-block; */
+  font-size: 12px;
+  line-height: 15px;
+  margin: 5px 0 0;
+  width: 100%;
+}
 #detail {
   flex: 1;
   /* padding: 2rem 4rem;
