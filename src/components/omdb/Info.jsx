@@ -1,31 +1,27 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Card, Button, Form } from "react-bootstrap";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Card, Button, Form } from "react-bootstrap";
 
 export default function Info() {
-  let { searchId } = useParams();
+  let { imdbId } = useParams();
   const navigate = useNavigate();
-  const [movieInfo, setMovieInfo] = useState();
+  const [movieInfo, setMovieInfo] = useState({});
 
-  useMemo(() => {
+  useEffect(() => {
     axios
       .get(
-        "https://www.omdbapi.com/?apikey=" +
-          import.meta.env.VITE_API_KEY +
-          "&type=movie&plot=full&t=" +
-          searchId
+        `https://www.omdbapi.com/?apikey=${
+          import.meta.env.VITE_API_KEY
+        }&type=movie&plot=full&i=${imdbId}`
       )
       .then((response) => {
         setMovieInfo(response.data);
-        const timer = setTimeout(() => {}, 1500);
-        return () => clearTimeout(timer);
       })
       .catch(function (error) {
         console.warn(error);
       });
-  }, [searchId]);
+  }, [imdbId]);
 
   return (
     <div id="contact">

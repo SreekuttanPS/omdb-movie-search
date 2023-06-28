@@ -1,22 +1,22 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
+import SearchPage from "../pages/SearchPage";
 import ErrorPage from "../pages/ErrorPage";
 import List from "../components/omdb/List";
 import Info from "../components/omdb/Info";
-import Omdb from "../pages/Omdb";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <Omdb />,
+    element: <SearchPage />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/search/:searchName",
+        path: "/search/:searchText",
         element: <List />,
       },
       {
-        path: "/:searchId/details",
+        path: "/:imdbId/:searchText/details",
         element: <Info />,
       },
     ],
