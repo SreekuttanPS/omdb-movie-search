@@ -1,95 +1,83 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Outlet, useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { Card, Button } from "react-bootstrap";
-import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+
+let baseUrl = `https://www.omdbapi.com/?apikey=${
+  import.meta.env.VITE_API_KEY
+}&type=movie&plot=full&s=`;
 
 export default function SearchPage() {
-  const [loadingSpinner, setLoadingSpinner] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(false);
-  const [apiError, setApiError] = useState({ error: false, message: "" });
+  const [isFetchingData, setIsFetchingData] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [apiError, setApiError] = useState("");
   const [moviesList, setMoviesList] = useState([]);
-  const searchTextRef = useRef();
-  const navigate = useNavigate();
-  let { searchText } = useParams();
-  const errorTostify = (error) =>
-    toast.error(`Oops! ${error}`, {
-      position: "top-right",
-      autoClose: 7000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-    });
 
-  const onSearch = () => {
-    setLoadingSpinner(true);
-    if (searchTextRef.current.value != "") {
+  const searchTextRef = useRef(null);
+  const isInitialMount = useRef(true);
+  const navigate = useNavigate();
+  let { searchText, movieTitle } = useParams();
+
+  const movieListFetch = useCallback(
+    (url) => {
+      setIsFetchingData(true);
+
+      navigate(`/search/${searchTextRef.current.value}`);
       axios
-        .get(
-          `https://www.omdbapi.com/?apikey=${
-            import.meta.env.VITE_API_KEY
-          }&type=movie&plot=full&s="${searchTextRef.current.value}`
-        )
+        .get(url)
         .then((response) => {
+          setIsFetchingData(false);
           if (response.data.Response == "True") {
-            setApiError({ error: false, message: "" });
-            let list = response.data.Search.map(function (item) {
-              return (
-                <div className="col-12 col-md-6 col-lg-3 p-2" key={item.imdbID}>
-                  <Card>
-                    <Card.Img
-                      className="card-image p-2"
-                      variant="top"
-                      src={item.Poster}
-                    />
-                    <Card.Body>
-                      <Card.Title>{item.Title}</Card.Title>
-                      <Card.Text>{item.Year}</Card.Text>
-                      <Button
-                        variant="primary"
-                        onClick={() => {
-                          navigate(`/${item.imdbID}/${searchText}/details`);
-                        }}
-                      >
-                        More Details {" >>"}
-                      </Button>
-                    </Card.Body>
-                  </Card>
-                </div>
-              );
-            });
-            setMoviesList(list);
+            setApiError("");
+            setMoviesList(response.data.Search);
           } else {
-            setApiError({ error: true, message: response.data.Error });
+            toast.error(`Oops! ${response.data.Error}`);
           }
         })
         .catch(function (error) {
-          errorTostify(error);
-          console.warn(error);
+          setIsFetchingData(false);
+          toast.error(`Oops! ${error}`);
         });
-      setLoadingSpinner(false);
-      setErrorMessage(false);
-      navigate(`/search/${searchTextRef.current.value}`);
+    },
+    [navigate]
+  );
+
+  const searchValidation = () => {
+    if (searchTextRef.current.value === "") {
+      setErrorMessage("Please enter a search text");
+      searchTextRef.current.focus();
     } else {
-      setErrorMessage(true);
+      setErrorMessage("");
     }
-    setLoadingSpinner(false);
   };
 
-  const handleKeyDown = (event) => {
+  const onSearch = useCallback(() => {
+    if (searchTextRef.current.value != "") {
+      let url = `${baseUrl}${searchTextRef.current.value}`;
+      movieListFetch(url);
+    }
+  }, [movieListFetch]);
+
+  const handleKeyUp = (event) => {
     if (event.key === "Enter") {
+      searchValidation();
       onSearch();
     }
   };
 
   useEffect(() => {
-    searchText ? (searchTextRef.current.value = searchText) : null;
-    onSearch();
-  }, []);
+    if (searchText) {
+      searchTextRef.current.value = searchText;
+    } else if (movieTitle) {
+      searchTextRef.current.value = movieTitle;
+    } else {
+      searchTextRef.current.value = "";
+    }
+    if (searchText && isInitialMount.current) {
+      onSearch();
+    }
+    isInitialMount.current = false;
+  }, [onSearch, searchText, movieTitle]);
 
   return (
     <>
@@ -115,23 +103,24 @@ export default function SearchPage() {
                 placeholder="Search"
                 type="search"
                 name="search"
-                onKeyUp={handleKeyDown}
+                onKeyUp={handleKeyUp}
+                onBlur={searchValidation}
               />
 
               <div className="sr-only" aria-live="polite"></div>
               <button className="mx-2" onClick={onSearch}>
-                Search
-                {loadingSpinner ? (
+                {isFetchingData ? (
                   <span
                     className="spinner-border spinner-border-sm mx-1"
                     role="status"
                   ></span>
                 ) : null}
+                Search
               </button>
             </div>
-            {errorMessage && (
-              <div className="errorMsg">Invalid Search text</div>
-            )}
+            {errorMessage !== "" ? (
+              <div className="errorMsg">{errorMessage}</div>
+            ) : null}
           </div>
         </div>
       </div>
