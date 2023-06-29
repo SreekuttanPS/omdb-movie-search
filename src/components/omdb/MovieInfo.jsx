@@ -23,6 +23,7 @@ export default function MovieInfo() {
         setMovieInfo(response.data);
       })
       .catch(function (error) {
+        setIsLoading(false);
         toast.error(`Oops! ${error}`);
       });
   }, [imdbId]);

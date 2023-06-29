@@ -10,7 +10,6 @@ let baseUrl = `https://www.omdbapi.com/?apikey=${
 export default function SearchPage() {
   const [isFetchingData, setIsFetchingData] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [apiError, setApiError] = useState("");
   const [moviesList, setMoviesList] = useState([]);
 
   const searchTextRef = useRef(null);
@@ -28,7 +27,6 @@ export default function SearchPage() {
         .then((response) => {
           setIsFetchingData(false);
           if (response.data.Response == "True") {
-            setApiError("");
             setMoviesList(response.data.Search);
           } else {
             toast.error(`Oops! ${response.data.Error}`);
@@ -114,18 +112,22 @@ export default function SearchPage() {
                     className="spinner-border spinner-border-sm mx-1"
                     role="status"
                   ></span>
-                ) : null}
+                ) : (
+                  ""
+                )}
                 Search
               </button>
             </div>
             {errorMessage !== "" ? (
               <div className="errorMsg">{errorMessage}</div>
-            ) : null}
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>
       <div id="detail">
-        <Outlet context={[apiError, moviesList]} />
+        {moviesList ? <Outlet context={[moviesList]} /> : ""}
       </div>
     </>
   );
