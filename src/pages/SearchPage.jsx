@@ -118,7 +118,7 @@ export default function SearchPage() {
                 Search
               </button>
             </div>
-            {errorMessage !== "" ? (
+            {errorMessage ? (
               <div className="errorMsg">{errorMessage}</div>
             ) : (
               ""
