@@ -9,6 +9,13 @@ export default function MovieList() {
   return (
     <div id="contact">
       <div className="row w-100 my-3">
+        {!moviesList.length ? (
+          <span className="text-danger m-5">
+            Some error occured, Please try again!
+          </span>
+        ) : (
+          ""
+        )}
         {moviesList.map((item) => {
           return (
             <div className="col-12 col-md-6 col-lg-3 p-2" key={item.imdbID}>

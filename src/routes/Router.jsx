@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import SearchPage from "pages/SearchPage";
 import ErrorPage from "pages/ErrorPage";
-import MovieList from "components/omdb/MovieList";
-import MovieInfo from "components/omdb/MovieInfo";
+import MovieList from "components/movie-hunter/MovieList";
+import MovieInfo from "components/movie-hunter/MovieInfo";
 
 export const router = createBrowserRouter([
   {

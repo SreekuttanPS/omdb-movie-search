@@ -51,6 +51,7 @@ export default function SearchPage() {
 
   const onSearch = useCallback(() => {
     if (searchTextRef.current.value != "") {
+      setMoviesList([]);
       let url = `${baseUrl}${searchTextRef.current.value}`;
       movieListFetch(url);
     }

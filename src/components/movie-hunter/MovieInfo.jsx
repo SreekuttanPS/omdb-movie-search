@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, Button, Form } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import StarRating from "./StarRating";
 
 let url = `https://www.omdbapi.com/?apikey=${
   import.meta.env.VITE_API_KEY
@@ -57,6 +58,18 @@ export default function MovieInfo() {
             </Card>
             <div className="d-grid gap-2 d-md-block">
               <p className="mt-3">IMDb Rating : {movieInfo?.imdbRating}</p>
+              {Object.keys(movieInfo).length > 0 ? (
+                <StarRating
+                  rating={movieInfo?.imdbRating}
+                  stroke={15}
+                  strokeColor="#B67F40"
+                  fillerColor="#FACD3A"
+                  bgColour="white"
+                />
+              ) : (
+                ""
+              )}
+
               <p>Release Date : {movieInfo?.Released}</p>
               <p>Time : {movieInfo?.Runtime}</p>
               <p>Genre : {movieInfo?.Genre}</p>
