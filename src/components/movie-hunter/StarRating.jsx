@@ -1,6 +1,7 @@
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-const SvgStar = ({
+function SvgStar({
   keyValue,
   fillerColor,
   bgColour,
@@ -8,10 +9,7 @@ const SvgStar = ({
   strokeColor,
   stroke,
   id,
-}) => {
-  // if (isNaN(filler)) {
-  //   filler = 0;
-  // }
+}) {
   return (
     <svg height="30" width="35" viewBox="0 0 200 300" key={keyValue}>
       <defs>
@@ -28,18 +26,20 @@ const SvgStar = ({
       </g>
     </svg>
   );
-};
+}
 
-const StarRating = ({ rating, bgColour, fillerColor, stroke, strokeColor }) => {
-  let svgRating = Number(rating) / 2;
-  let finalStarCount = Math.floor(svgRating);
-  let filler = (svgRating % 1).toFixed(2).substring(2);
+function StarRating({
+  rating, bgColour, fillerColor, stroke, strokeColor,
+}) {
+  const svgRating = Number(rating) / 2;
+  const finalStarCount = Math.floor(svgRating);
+  const filler = (svgRating % 1).toFixed(2).substring(2);
 
   let i = 0;
   const starArray = [];
 
-  for (i; i < 5; i++) {
-    if (filler > 0 && i == finalStarCount) {
+  for (i; i < 5; i += 1) {
+    if (filler > 0 && i === finalStarCount) {
       starArray.push(
         <SvgStar
           key={i}
@@ -49,7 +49,7 @@ const StarRating = ({ rating, bgColour, fillerColor, stroke, strokeColor }) => {
           id="halfstar"
           strokeColor={strokeColor}
           stroke={stroke}
-        />
+        />,
       );
     } else if (i >= finalStarCount) {
       starArray.push(
@@ -61,7 +61,7 @@ const StarRating = ({ rating, bgColour, fillerColor, stroke, strokeColor }) => {
           id="emptystar"
           strokeColor={strokeColor}
           stroke={stroke}
-        />
+        />,
       );
     } else {
       starArray.push(
@@ -73,13 +73,13 @@ const StarRating = ({ rating, bgColour, fillerColor, stroke, strokeColor }) => {
           id="fullstar"
           strokeColor={strokeColor}
           stroke={stroke}
-        />
+        />,
       );
     }
   }
 
   return starArray;
-};
+}
 StarRating.propTypes = {
   rating: PropTypes.string,
   stroke: PropTypes.number,
@@ -89,14 +89,13 @@ StarRating.propTypes = {
 };
 
 SvgStar.propTypes = {
-  rating: PropTypes.string,
-  stroke: PropTypes.number,
-  filler: PropTypes.string,
-  keyValue: PropTypes.number,
-  strokeColor: PropTypes.string,
-  id: PropTypes.string,
-  bgColour: PropTypes.string,
-  fillerColor: PropTypes.string,
+  stroke: PropTypes.number.isRequired,
+  filler: PropTypes.string.isRequired,
+  keyValue: PropTypes.number.isRequired,
+  strokeColor: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  bgColour: PropTypes.string.isRequired,
+  fillerColor: PropTypes.string.isRequired,
 };
 
 export default StarRating;
