@@ -4,12 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 export default function MovieList() {
   const navigate = useNavigate();
-  const [moviesList] = useOutletContext();
+  const [moviesList, isFetchingData] = useOutletContext();
 
   return (
     <div id="contact">
       <div className="row w-100 my-3">
-        {!moviesList.length ? (
+        {!moviesList.length && !isFetchingData ? (
           <span className="text-danger m-5">
             Some error occured, Please try again!
           </span>
