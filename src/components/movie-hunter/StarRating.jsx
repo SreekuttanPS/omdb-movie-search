@@ -1,9 +1,10 @@
 import PropTypes from "prop-types";
+import { generateRandomString } from "helpers/utils";
 
 function Star({
   fullStarColor,
   emptyStarColor,
-  StarFillPercentage,
+  starFillPercentage,
   starBorderColor,
   starBorderWidth,
   id,
@@ -13,8 +14,8 @@ function Star({
       <defs>
         <linearGradient id={id}>
           <stop offset="0%" stopColor={fullStarColor} />
-          <stop offset={`${StarFillPercentage}%`} stopColor={fullStarColor} />
-          <stop offset={`${StarFillPercentage}%`} stopColor={emptyStarColor} />
+          <stop offset={`${starFillPercentage}%`} stopColor={fullStarColor} />
+          <stop offset={`${starFillPercentage}%`} stopColor={emptyStarColor} />
           <stop offset="100%" stopColor={emptyStarColor} />
         </linearGradient>
       </defs>
@@ -25,9 +26,6 @@ function Star({
     </svg>
   );
 };
-
-const generateRandomString = () => Math.random().toString(36).substring(2, 15)
-  + Math.random().toString(36).substring(2, 15);
 
 function StarRating({
   rating,
@@ -51,7 +49,7 @@ function StarRating({
       <Star
         key={generateRandomString()}
         fullStarColor={fullStarColor}
-        StarFillPercentage={value}
+        starFillPercentage={value}
         emptyStarColor={emptyStarColor}
         id={value}
         starBorderColor={starBorderColor}
@@ -70,7 +68,7 @@ StarRating.propTypes = {
 
 Star.propTypes = {
   starBorderWidth: PropTypes.number.isRequired,
-  StarFillPercentage: PropTypes.string.isRequired,
+  starFillPercentage: PropTypes.string.isRequired,
   starBorderColor: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   emptyStarColor: PropTypes.string.isRequired,
