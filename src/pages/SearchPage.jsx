@@ -51,6 +51,7 @@ export default function SearchPage() {
 
   const onSearch = useCallback(() => {
     if (searchTextRef.current.value != "") {
+      setMoviesList([]);
       let url = `${baseUrl}${searchTextRef.current.value}`;
       movieListFetch(url);
     }
@@ -127,7 +128,7 @@ export default function SearchPage() {
         </div>
       </div>
       <div id="detail">
-        {moviesList ? <Outlet context={[moviesList]} /> : ""}
+        <Outlet context={[moviesList, isFetchingData]} />
       </div>
     </>
   );
