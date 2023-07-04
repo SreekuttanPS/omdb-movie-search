@@ -1,28 +1,31 @@
-import { createBrowserRouter } from "react-router-dom";
-import SearchPage from "pages/SearchPage";
-import ErrorPage from "pages/ErrorPage";
-import MovieList from "components/movie-hunter/MovieList";
-import MovieInfo from "components/movie-hunter/MovieInfo";
+import React from 'react';
+import { createBrowserRouter } from 'react-router-dom';
+import SearchPage from 'pages/SearchPage';
+import ErrorPage from 'pages/ErrorPage';
+import MovieList from 'components/movie-hunter/MovieList';
+import MovieInfo from 'components/movie-hunter/MovieInfo';
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <SearchPage />,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "/search/:searchText",
+        path: '/search/:searchText',
         element: <MovieList />,
       },
       {
-        path: "/:imdbId/:movieTitle/details",
+        path: '/:imdbId/:movieTitle/details',
         element: <MovieInfo />,
       },
     ],
   },
   {
-    path: "/search",
+    path: '/search',
     element: <SearchPage />,
     errorElement: <ErrorPage />,
   },
 ]);
+
+export default router;

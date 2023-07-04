@@ -1,21 +1,24 @@
-import { useState, useRef, useEffect, useCallback } from "react";
-import { Outlet, useNavigate, useParams } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
 
-let baseUrl = `https://www.omdbapi.com/?apikey=${
-  import.meta.env.VITE_API_KEY
-}&type=movie&plot=full&s=`;
+const baseUrl = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full&s=`;
 
 export default function SearchPage() {
   const [isFetchingData, setIsFetchingData] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const [moviesList, setMoviesList] = useState([]);
 
   const searchTextRef = useRef(null);
   const isInitialMount = useRef(true);
   const navigate = useNavigate();
-  let { searchText, movieTitle } = useParams();
+  const { searchText, movieTitle } = useParams();
 
   const movieListFetch = useCallback(
     (url) => {
@@ -26,39 +29,39 @@ export default function SearchPage() {
         .get(url)
         .then((response) => {
           setIsFetchingData(false);
-          if (response.data.Response == "True") {
+          if (response.data.Response === 'True') {
             setMoviesList(response.data.Search);
           } else {
             toast.error(`Oops! ${response.data.Error}`);
           }
         })
-        .catch(function (error) {
+        .catch((error) => {
           setIsFetchingData(false);
           toast.error(`Oops! ${error}`);
         });
     },
-    [navigate]
+    [navigate],
   );
 
   const searchValidation = () => {
-    if (searchTextRef.current.value === "") {
-      setErrorMessage("Please enter a search text");
+    if (searchTextRef.current.value === '') {
+      setErrorMessage('Please enter a search text');
       searchTextRef.current.focus();
     } else {
-      setErrorMessage("");
+      setErrorMessage('');
     }
   };
 
   const onSearch = useCallback(() => {
-    if (searchTextRef.current.value != "") {
+    if (searchTextRef.current.value !== '') {
       setMoviesList([]);
-      let url = `${baseUrl}${searchTextRef.current.value}`;
+      const url = `${baseUrl}${searchTextRef.current.value}`;
       movieListFetch(url);
     }
   }, [movieListFetch]);
 
   const handleKeyUp = (event) => {
-    if (event.key === "Enter") {
+    if (event.key === 'Enter') {
       searchValidation();
       onSearch();
     }
@@ -70,7 +73,7 @@ export default function SearchPage() {
     } else if (movieTitle) {
       searchTextRef.current.value = movieTitle;
     } else {
-      searchTextRef.current.value = "";
+      searchTextRef.current.value = '';
     }
     if (searchText && isInitialMount.current) {
       onSearch();
@@ -106,15 +109,19 @@ export default function SearchPage() {
                 onBlur={searchValidation}
               />
 
-              <div className="sr-only" aria-live="polite"></div>
-              <button className="mx-2" onClick={onSearch}>
+              <div className="sr-only" aria-live="polite" />
+              <button
+                type="button"
+                className="mx-2"
+                onClick={onSearch}
+              >
                 {isFetchingData ? (
                   <span
                     className="spinner-border spinner-border-sm mx-1"
                     role="status"
-                  ></span>
+                  />
                 ) : (
-                  ""
+                  ''
                 )}
                 Search
               </button>
@@ -122,7 +129,7 @@ export default function SearchPage() {
             {errorMessage ? (
               <div className="errorMsg">{errorMessage}</div>
             ) : (
-              ""
+              ''
             )}
           </div>
         </div>

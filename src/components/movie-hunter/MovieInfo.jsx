@@ -1,16 +1,14 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, Form } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
-import StarRating from "components/movie-hunter/StarRating";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Card, Button, Form } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
+import StarRating from 'components/movie-hunter/StarRating';
 
-let url = `https://www.omdbapi.com/?apikey=${
-  import.meta.env.VITE_API_KEY
-}&type=movie&plot=full`;
+const url = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full`;
 
 export default function MovieInfo() {
-  let { imdbId } = useParams();
+  const { imdbId } = useParams();
   const navigate = useNavigate();
   const [movieInfo, setMovieInfo] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +21,7 @@ export default function MovieInfo() {
         setIsLoading(false);
         setMovieInfo(response.data);
       })
-      .catch(function (error) {
+      .catch((error) => {
         setIsLoading(false);
         toast.error(`Oops! ${error}`);
       });
@@ -53,11 +51,15 @@ export default function MovieInfo() {
         <div className="container w-100 p-5">
           <Form>
             <h2>{movieInfo?.Title}</h2>
-            <Card style={{ width: "18rem" }} className="mt-3">
+            <Card style={{ width: '18rem' }} className="mt-3">
               <Card.Img variant="top" src={movieInfo?.Poster} />
             </Card>
             <div className="d-grid gap-2 d-md-block">
-              <p className="mt-3">IMDb Rating : {movieInfo?.imdbRating}</p>
+              <p className="mt-3">
+                IMDb Rating :
+                {' '}
+                {movieInfo?.imdbRating}
+              </p>
               {Object.keys(movieInfo).length > 0 ? (
                 <StarRating
                   rating={movieInfo?.imdbRating}
@@ -67,18 +69,54 @@ export default function MovieInfo() {
                   emptyStarColor="white"
                 />
               ) : (
-                ""
+                ''
               )}
 
-              <p>Release Date : {movieInfo?.Released}</p>
-              <p>Time : {movieInfo?.Runtime}</p>
-              <p>Genre : {movieInfo?.Genre}</p>
-              <p>Director : {movieInfo?.Director}</p>
-              <p>Writer(s) : {movieInfo?.Writer}</p>
-              <p>Actors : {movieInfo?.Actors}</p>
-              <p>Language : {movieInfo?.Language}</p>
-              <p>Awards : {movieInfo?.Awards}</p>
-              <p>Plot : {movieInfo?.Plot}</p>
+              <p>
+                Release Date :
+                {' '}
+                {movieInfo?.Released}
+              </p>
+              <p>
+                Time :
+                {' '}
+                {movieInfo?.Runtime}
+              </p>
+              <p>
+                Genre :
+                {' '}
+                {movieInfo?.Genre}
+              </p>
+              <p>
+                Director :
+                {' '}
+                {movieInfo?.Director}
+              </p>
+              <p>
+                Writer(s) :
+                {' '}
+                {movieInfo?.Writer}
+              </p>
+              <p>
+                Actors :
+                {' '}
+                {movieInfo?.Actors}
+              </p>
+              <p>
+                Language :
+                {' '}
+                {movieInfo?.Language}
+              </p>
+              <p>
+                Awards :
+                {' '}
+                {movieInfo?.Awards}
+              </p>
+              <p>
+                Plot :
+                {' '}
+                {movieInfo?.Plot}
+              </p>
             </div>
             <Button
               className="m-3"
@@ -87,7 +125,7 @@ export default function MovieInfo() {
                 navigate(-1);
               }}
             >
-              {" Back <<"}
+              {' Back <<'}
             </Button>
           </Form>
         </div>
