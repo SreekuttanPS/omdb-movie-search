@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Button, Form } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios';
-import StarRating from 'components/movie-hunter/StarRating';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Card, Button, Form } from "react-bootstrap";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import StarRating from "components/movie-hunter/StarRating";
 
 const url = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full`;
 
@@ -63,10 +63,10 @@ export default function MovieInfo() {
               {Object.keys(movieInfo).length > 0 ? (
                 <StarRating
                   rating={movieInfo?.imdbRating}
-                  stroke={15}
-                  strokeColor="#B67F40"
-                  fillerColor="#FACD3A"
-                  bgColour="white"
+                  starBorderWidth={15}
+                  starBorderColor="#B67F40"
+                  fullStarColor="#FACD3A"
+                  emptyStarColor="white"
                 />
               ) : (
                 ''
