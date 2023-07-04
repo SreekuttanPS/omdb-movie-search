@@ -1,5 +1,6 @@
-import PropTypes from "prop-types";
-import { generateRandomString } from "helpers/utils";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { generateRandomString } from 'helpers/utils';
 
 function Star({
   fullStarColor,

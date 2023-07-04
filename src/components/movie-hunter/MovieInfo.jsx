@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, Form } from "react-bootstrap";
-import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
-import StarRating from "components/movie-hunter/StarRating";
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Card, Button, Form } from 'react-bootstrap';
+import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios';
+import StarRating from 'components/movie-hunter/StarRating';
 
 const url = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full`;
 
