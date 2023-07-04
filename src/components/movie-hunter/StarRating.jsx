@@ -1,28 +1,24 @@
 import PropTypes from "prop-types";
 
-const SvgStar = ({
-  keyValue,
-  fillerColor,
-  bgColour,
-  filler,
-  strokeColor,
-  stroke,
+function Star({
+  fullStarColor,
+  emptyStarColor,
+  StarFillPercentage,
+  starBorderColor,
+  starBorderWidth,
   id,
-}) => {
-  // if (isNaN(filler)) {
-  //   filler = 0;
-  // }
+}) {
   return (
-    <svg height="30" width="35" viewBox="0 0 200 300" key={keyValue}>
+    <svg height="30" width="35" viewBox="0 0 200 300">
       <defs>
         <linearGradient id={id}>
-          <stop offset="0%" stopColor={fillerColor} />
-          <stop offset={`${filler}%`} stopColor={fillerColor} />
-          <stop offset={`${filler}%`} stopColor={bgColour} />
-          <stop offset="100%" stopColor={bgColour} />
+          <stop offset="0%" stopColor={fullStarColor} />
+          <stop offset={`${StarFillPercentage}%`} stopColor={fullStarColor} />
+          <stop offset={`${StarFillPercentage}%`} stopColor={emptyStarColor} />
+          <stop offset="100%" stopColor={emptyStarColor} />
         </linearGradient>
       </defs>
-      <g fill={`url(#${id})`} stroke={strokeColor} strokeWidth={stroke}>
+      <g fill={`url(#${id})`} stroke={starBorderColor} strokeWidth={starBorderWidth}>
         <polygon points="100,10 40,198 190,78 10,78 160,198" />
         <polygon points="100,10 40,198 190,78 10,78 160,198" stroke="none" />
       </g>
@@ -30,73 +26,51 @@ const SvgStar = ({
   );
 };
 
-const StarRating = ({ rating, bgColour, fillerColor, stroke, strokeColor }) => {
-  let svgRating = Number(rating) / 2;
-  let finalStarCount = Math.floor(svgRating);
-  let filler = (svgRating % 1).toFixed(2).substring(2);
+const generateRandomString = () => Math.random().toString(36).substring(2, 15)
+  + Math.random().toString(36).substring(2, 15);
 
-  let i = 0;
-  const starArray = [];
+function StarRating({
+  rating, emptyStarColor, fullStarColor, starBorderWidth, starBorderColor,
+}) {
+  const svgRating = Number(rating) / 2;
+  const finalStarCount = Math.floor(svgRating);
+  const halfStarPercentage = (svgRating % 1).toFixed(2).substring(2);
 
-  for (i; i < 5; i++) {
-    if (filler > 0 && i == finalStarCount) {
-      starArray.push(
-        <SvgStar
-          key={i}
-          fillerColor={fillerColor}
-          filler={filler}
-          bgColour={bgColour}
-          id="halfstar"
-          strokeColor={strokeColor}
-          stroke={stroke}
-        />
-      );
-    } else if (i >= finalStarCount) {
-      starArray.push(
-        <SvgStar
-          key={i}
-          fillerColor={bgColour}
-          filler={filler}
-          bgColour={bgColour}
-          id="emptystar"
-          strokeColor={strokeColor}
-          stroke={stroke}
-        />
-      );
-    } else {
-      starArray.push(
-        <SvgStar
-          key={i}
-          fillerColor={fillerColor}
-          filler={filler}
-          bgColour={fillerColor}
-          id="fullstar"
-          strokeColor={strokeColor}
-          stroke={stroke}
-        />
-      );
-    }
+  const starArray = ['0', '0', '0', '0', '0'];
+  starArray.fill('100', 0, finalStarCount);
+  if (finalStarCount < 5 && halfStarPercentage > 0) {
+    starArray.fill(halfStarPercentage, finalStarCount, finalStarCount + 1);
   }
 
-  return starArray;
-};
+  return (
+    starArray.map((value) => (
+      <Star
+        key={generateRandomString()}
+        fullStarColor={fullStarColor}
+        StarFillPercentage={value}
+        emptyStarColor={emptyStarColor}
+        id={value}
+        starBorderColor={starBorderColor}
+        starBorderWidth={starBorderWidth}
+      />
+    ))
+  );
+}
 StarRating.propTypes = {
-  rating: PropTypes.string,
-  stroke: PropTypes.number,
-  strokeColor: PropTypes.string,
-  bgColour: PropTypes.string,
-  fillerColor: PropTypes.string,
+  rating: PropTypes.string.isRequired,
+  starBorderWidth: PropTypes.number.isRequired,
+  starBorderColor: PropTypes.string.isRequired,
+  emptyStarColor: PropTypes.string.isRequired,
+  fullStarColor: PropTypes.string.isRequired,
 };
 
-SvgStar.propTypes = {
-  rating: PropTypes.string,
-  stroke: PropTypes.number,
-  filler: PropTypes.string,
-  keyValue: PropTypes.number,
-  strokeColor: PropTypes.string,
-  id: PropTypes.string,
-  bgColour: PropTypes.string,
-  fillerColor: PropTypes.string,
+Star.propTypes = {
+  starBorderWidth: PropTypes.number.isRequired,
+  StarFillPercentage: PropTypes.string.isRequired,
+  starBorderColor: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  emptyStarColor: PropTypes.string.isRequired,
+  fullStarColor: PropTypes.string.isRequired,
 };
 
 export default StarRating;

@@ -128,7 +128,7 @@ export default function SearchPage() {
         </div>
       </div>
       <div id="detail">
-        {moviesList ? <Outlet context={[moviesList, isFetchingData]} /> : ""}
+        <Outlet context={[moviesList, isFetchingData]} />
       </div>
     </>
   );

@@ -61,10 +61,10 @@ export default function MovieInfo() {
               {Object.keys(movieInfo).length > 0 ? (
                 <StarRating
                   rating={movieInfo?.imdbRating}
-                  stroke={15}
-                  strokeColor="#B67F40"
-                  fillerColor="#FACD3A"
-                  bgColour="white"
+                  starBorderWidth={15}
+                  starBorderColor="#B67F40"
+                  fullStarColor="#FACD3A"
+                  emptyStarColor="white"
                 />
               ) : (
                 ""
