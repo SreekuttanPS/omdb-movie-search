@@ -30,7 +30,11 @@ const generateRandomString = () => Math.random().toString(36).substring(2, 15)
   + Math.random().toString(36).substring(2, 15);
 
 function StarRating({
-  rating, emptyStarColor, fullStarColor, starBorderWidth, starBorderColor,
+  rating,
+  emptyStarColor,
+  fullStarColor,
+  starBorderWidth,
+  starBorderColor,
 }) {
   const svgRating = Number(rating) / 2;
   const finalStarCount = Math.floor(svgRating);

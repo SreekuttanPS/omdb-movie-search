@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Card, Button, Form } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import StarRating from "./StarRating";
+import StarRating from "components/movie-hunter/StarRating";
 
 let url = `https://www.omdbapi.com/?apikey=${
   import.meta.env.VITE_API_KEY
