@@ -94,7 +94,7 @@ export default function SearchPage() {
               <input
                 ref={searchTextRef}
                 aria-label="Search contacts"
-                placeholder="Search"
+                placeholder="Please search here..."
                 type="search"
                 name="search"
                 onKeyUp={handleKeyUp}

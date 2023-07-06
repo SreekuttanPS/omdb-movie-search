@@ -13,6 +13,7 @@ import {
 
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
+import noImage from 'assets/no-image.jpeg';
 
 export default function MovieList() {
   const navigate = useNavigate();
@@ -39,11 +40,19 @@ export default function MovieList() {
                       height: '20rem',
                     }}
                   >
-                    <img
-                      className="movie-image"
-                      alt="Movie"
-                      src={item.Poster}
-                    />
+                    {item.Poster === 'N/A' ? (
+                      <img
+                        className="movie-image"
+                        alt="Movie"
+                        src={noImage}
+                      />
+                    ) : (
+                      <img
+                        className="movie-image"
+                        alt="Movie"
+                        src={item.Poster}
+                      />
+                    )}
                     <CardBody>
                       <CardTitle className="movie-title" tag="h6">
                         {item.Title}
@@ -81,7 +90,7 @@ export default function MovieList() {
       </div>
       <div className="footer-section">
         <div className="pagination-section">
-          <Pagination>
+          <Pagination size="sm">
             <PaginationItem>
               <PaginationLink
                 first
