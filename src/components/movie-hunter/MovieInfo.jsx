@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Button, Form } from 'react-bootstrap';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import {
+  Button,
+  Form,
+} from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+
 import StarRating from 'components/movie-hunter/StarRating';
 
 const url = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full`;
@@ -28,7 +33,7 @@ export default function MovieInfo() {
   }, [imdbId]);
 
   return (
-    <div id="contact">
+    <div className="movie-info-section">
       <ToastContainer
         position="top-right"
         autoClose={7000}
@@ -42,81 +47,63 @@ export default function MovieInfo() {
         theme="colored"
       />
       {isLoading ? (
-        <div className="container w-100 p-5 text-center">
+        <div className="info-loading container w-100 p-5 text-center">
           <div className="spinner-border text-dark" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : (
-        <div className="container w-100 p-5">
-          <Form>
+        <div className="container w-100">
+          <Form className="text-secondary">
             <h2>{movieInfo?.Title}</h2>
-            <Card style={{ width: '18rem' }} className="mt-3">
-              <Card.Img variant="top" src={movieInfo?.Poster} />
-            </Card>
-            <div className="d-grid gap-2 d-md-block">
-              <p className="mt-3">
+            <img className="movie-info-image" src={movieInfo?.Poster} alt="" />
+            <div className="movie-info-description d-grid gap-2 d-md-block">
+              <span className="mt-3">
                 IMDb Rating :
                 {' '}
                 {movieInfo?.imdbRating}
-              </p>
+              </span>
               {Object.keys(movieInfo).length > 0 ? (
-                <StarRating
-                  rating={movieInfo?.imdbRating}
-                  starBorderWidth={15}
-                  starBorderColor="#B67F40"
-                  fullStarColor="#FACD3A"
-                  emptyStarColor="white"
-                />
+                <span className="w-100">
+                  <StarRating
+                    rating={movieInfo?.imdbRating}
+                    starBorderWidth={15}
+                    starBorderColor="#B67F40"
+                    fullStarColor="#FACD3A"
+                    emptyStarColor="white"
+                  />
+                </span>
               ) : (
                 ''
               )}
 
-              <p>
-                Release Date :
-                {' '}
-                {movieInfo?.Released}
-              </p>
-              <p>
-                Time :
-                {' '}
-                {movieInfo?.Runtime}
-              </p>
-              <p>
-                Genre :
-                {' '}
-                {movieInfo?.Genre}
-              </p>
-              <p>
-                Director :
-                {' '}
-                {movieInfo?.Director}
-              </p>
-              <p>
-                Writer(s) :
-                {' '}
-                {movieInfo?.Writer}
-              </p>
-              <p>
-                Actors :
-                {' '}
-                {movieInfo?.Actors}
-              </p>
-              <p>
-                Language :
-                {' '}
-                {movieInfo?.Language}
-              </p>
-              <p>
-                Awards :
-                {' '}
-                {movieInfo?.Awards}
-              </p>
-              <p>
-                Plot :
-                {' '}
-                {movieInfo?.Plot}
-              </p>
+              <span>
+                {`Release Date : ${movieInfo?.Released}`}
+              </span>
+              <span>
+                {`Time : ${movieInfo?.Runtime}`}
+              </span>
+              <span>
+                {`Genre : ${movieInfo?.Genre}`}
+              </span>
+              <span>
+                {`Director : ${movieInfo?.Director}`}
+              </span>
+              <span>
+                {`Writer(s) : ${movieInfo?.Writer}`}
+              </span>
+              <span>
+                {`Actors : ${movieInfo?.Actors}`}
+              </span>
+              <span>
+                {`Language : ${movieInfo?.Language}`}
+              </span>
+              <span>
+                {`Awards : ${movieInfo?.Awards}`}
+              </span>
+              <span>
+                {`Plot : ${movieInfo?.Plot}`}
+              </span>
             </div>
             <Button
               className="m-3"

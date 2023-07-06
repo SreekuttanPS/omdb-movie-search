@@ -1,87 +1,255 @@
-textarea,
-input,
-button {
-  font-size: 1rem;
-  font-family: inherit;
-  border: none;
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.2), 0 1px 2px hsla(0, 0%, 0%, 0.2);
-  background-color: white;
-  line-height: 1.5;
-  margin: 0;
-}
-button {
-  color: #000000;
-  font-weight: 500;
-}
-
-textarea:hover,
-input:hover,
-button:hover {
-  box-shadow: 0 0px 1px hsla(0, 0%, 0%, 0.6), 0 1px 2px hsla(0, 0%, 0%, 0.2);
+/* Variables */
+/*   --background: #393646;
+  --content-background: #4F4557;
+  --button-background: #5F264A;
+  --input-background: #D1D4C9;
+  --card-background: #6D5D6E;
+  --fav-background: #352F44;
+  --text-color: #DBD8E3;
+  --error-color: #CA3E47; */
+:root {
+  --background: #082032;
+  --content-background: #2c394b;
+  --button-background: #af0404;
+  --input-background: #6d5d6e;
+  /* --input-background: #2D4263; */
+  --card-background: #b4a5a5;
+  --fav-background: #352f44;
+  --text-color: #dbd8e3;
+  --error-color: #ca3e47;
 }
 
-button:active {
-  box-shadow: 1px 2px 1px hsla(0, 0%, 0%, 0.4);
-  transform: translateY(1px);
+/* Movie Hunter */
+
+.movie-search-body {
+  background: var(--background);
 }
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-#searchbar {
-  /* width: 22rem; */
-  background-color: #f7f7f7;
-  border-right: solid 1px #e3e3e3;
+/* Main div */
+.movie-search-container {
+  width: 70%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: baseline;
+  flex-wrap: wrap;
+  background: var(--content-background);
 }
 
-#searchbar > * {
-  padding-left: 2rem;
-  padding-right: 2rem;
+/* header */
+.header-part {
+  height: 20%;
+  width: 100%;
 }
 
-#searchbar > div {
+.header-part .logo-part {
+  margin-bottom: 13px;
+  margin-top: 13px;
+}
+
+.header-part .logo-part img {
+  width: 35vw;
+  max-width: 224px;
+}
+
+.header-part .searchbar .input-section input {
+  height: 40px;
+  background: var(--input-background);
+  color: var(--text-color);
+  border-radius: 10px;
+  margin-top: 10px;
+  width: 75%;
+  text-align: center;
+  border: none;
+}
+
+.header-part .searchbar .input-section input::-webkit-input-placeholder {
+  color: var(--text-color);
+}
+
+:-moz-placeholder {
+  color: var(--text-color);
+  opacity: 1;
+}
+
+.header-part .searchbar .input-section input::-moz-placeholder {
+  color: var(--text-color);
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  color: var(--text-color);
+}
+
+.header-part .searchbar .input-section input::-ms-input-placeholder {
+  color: var(--text-color);
+}
+
+.header-part .searchbar .input-section input::placeholder {
+  color: var(--text-color);
+}
+
+.header-part .searchbar .input-section .search-button {
+  height: 40px;
+  background: var(--button-background);
+  color: var(--text-color);
+  border-radius: 10px;
+  margin-top: 10px;
+  padding-bottom: 5px;
+  border: none;
+  width: 100px;
+}
+
+.header-part .searchbar .error-msg {
+  color: var(--error-color);
+}
+
+.header-part .advanced-search {
+  margin-top: 10px;
+  color: var(--text-color);
+}
+
+.header-part .advanced-search .adv-search-criteria {
   display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
   align-items: center;
-  gap: 0.5rem;
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid #e3e3e3;
-}
-
-#searchbar > div form input[type="search"].loading {
-  background-image: none;
-}
-
-.grouping {
   flex-wrap: wrap;
 }
-
-.grouping .errorMsg {
-  color: #cc0033;
-  /* display: inline-block; */
-  font-size: 12px;
-  line-height: 15px;
-  margin: 5px 0 0;
-  width: 100%;
+@media screen and (max-width: 916px) {
+  .header-part .advanced-search .adv-search-criteria {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+  }
 }
 
-#error-page {
+.header-part .advanced-search .adv-search-criteria select {
+  height: 30px;
+  text-align: center;
+  border-radius: 10px;
+  border: none;
+  background: var(--input-background);
+}
+
+.header-part .advanced-search .adv-search-criteria input {
+  height: 30px;
+  text-align: center;
+  border-radius: 10px;
+  background: var(--input-background);
+  border: none;
+}
+
+/* Content */
+.content-section .movie-list-section {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+}
+
+.content-section .movie-card {
+  position: relative;
+}
+
+.movie-card-button {
+  position: absolute;
+  top: 130px;
+  left: 27px;
+  display: none;
+  z-index: 10;
+  background: initial;
+  font-size: 13px;
+}
+
+.add-to-fav-button {
+  background: var(--fav-background);
+  color: var(--text-color);
+  top: 307px;
+  position: absolute;
+  width: 176px;
+  border-color: var(--fav-background);
+  height: 45px;
+  border-radius: 0px 0px 5px 5px;
+  font-size: 14px;
+
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.add-to-fav-button:after {
+  content: "";
+  background: var(--fav-background);
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s;
+}
+
+.add-to-fav-button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s;
+}
+
+.add-to-fav-button:hover {
+  background: var(--fav-background);
+  color: var(--text-color);
+}
+
+.favourite-icon {
+  height: 15px;
+  margin-left: 3px;
+}
+.not-favourite-icon {
+  height: 15px;
+  margin-left: 3px;
+}
+
+.movie-card-content:hover + .movie-card-button,
+.movie-card-button:hover {
+  display: inline-block;
+}
+
+.movie-card-button:hover {
+  background: blueviolet;
+}
+
+.movie-card .movie-card-content .movie-image {
+  max-height: 170px;
+  min-height: 170px;
+}
+
+.movie-card .movie-card-content .movie-title {
+  min-height: 80px;
+}
+
+.movie-card {
+  display: -webkit-inline-box;
+}
+
+.card {
+  background: var(--card-background);
+}
+
+.card:hover {
+  opacity: 0.2;
+}
+
+.movie-info-section .movie-info-image {
   width: 100%;
+  max-width: 300px;
+}
+
+.movie-info-section .movie-info-description span::after {
+  content: "\a";
+  white-space: pre;
 }

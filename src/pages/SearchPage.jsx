@@ -8,6 +8,8 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 
+import logo from 'assets/logo.gif';
+
 const baseUrl = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full&s=`;
 
 export default function SearchPage() {
@@ -46,7 +48,6 @@ export default function SearchPage() {
   const searchValidation = () => {
     if (searchTextRef.current.value === '') {
       setErrorMessage('Please enter a search text');
-      searchTextRef.current.focus();
     } else {
       setErrorMessage('');
     }
@@ -82,37 +83,28 @@ export default function SearchPage() {
   }, [onSearch, searchText, movieTitle]);
 
   return (
-    <>
-      <div id="searchbar">
-        <ToastContainer
-          position="top-right"
-          autoClose={7000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
-        <div>
-          <div className="grouping">
-            <div>
+    <div className="movie-search-body">
+      <div className="container movie-search-container text-center">
+        <div className="header-part">
+          <div className="logo-part">
+            <img src={logo} alt="" />
+          </div>
+          <div className="searchbar">
+            <div className="input-section">
               <input
                 ref={searchTextRef}
                 aria-label="Search contacts"
-                placeholder="Search"
+                placeholder="Please search here..."
                 type="search"
                 name="search"
                 onKeyUp={handleKeyUp}
                 onBlur={searchValidation}
               />
 
-              <div className="sr-only" aria-live="polite" />
               <button
                 type="button"
-                className="mx-2"
+                className="search-button mx-2"
+                onMouseUp={searchValidation}
                 onClick={onSearch}
               >
                 {isFetchingData ? (
@@ -127,16 +119,53 @@ export default function SearchPage() {
               </button>
             </div>
             {errorMessage ? (
-              <div className="errorMsg">{errorMessage}</div>
+              <span className="error-msg">{errorMessage}</span>
             ) : (
               ''
             )}
           </div>
+          <div className="advanced-search">
+            <span>Advanced search ▽ </span>
+            <div className="adv-search-criteria">
+              <div className="mt-2">
+                Type :
+                {' '}
+                <select name="type">
+                  <option value="movie" defaultValue>Movies</option>
+                  <option value="series">Series</option>
+                  <option value="episode">Episodes</option>
+                </select>
+              </div>
+              <div className="mt-2">
+                Year :
+                {' '}
+                <input className="w-50" type="text" name="yearSearch" />
+              </div>
+              <div className="mt-2">
+                View :
+                {' '}
+                <select name="view">
+                  <option value="paginated" defaultValue>Paginated View</option>
+                  <option value="infinite">Infinite Scroll</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <ToastContainer
+            position="top-right"
+            autoClose={7000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+          />
         </div>
-      </div>
-      <div id="detail">
         <Outlet context={[moviesList, isFetchingData]} />
       </div>
-    </>
+    </div>
   );
 }
