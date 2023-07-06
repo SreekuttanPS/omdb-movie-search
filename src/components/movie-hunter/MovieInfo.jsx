@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, Button, Form } from 'react-bootstrap';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import {
+  Button,
+  Form,
+} from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
+
 import StarRating from 'components/movie-hunter/StarRating';
 
 const url = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full`;
@@ -49,11 +54,9 @@ export default function MovieInfo() {
         </div>
       ) : (
         <div className="container w-100 p-5">
-          <Form>
+          <Form className="text-secondary">
             <h2>{movieInfo?.Title}</h2>
-            <Card style={{ width: '18rem' }} className="mt-3">
-              <Card.Img variant="top" src={movieInfo?.Poster} />
-            </Card>
+            <img src={movieInfo?.Poster} alt="" />
             <div className="d-grid gap-2 d-md-block">
               <p className="mt-3">
                 IMDb Rating :
