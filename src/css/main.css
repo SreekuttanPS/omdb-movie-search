@@ -1,21 +1,11 @@
-/* Variables */
-/*   --background: #393646;
-  --content-background: #4F4557;
-  --button-background: #5F264A;
-  --input-background: #D1D4C9;
-  --card-background: #6D5D6E;
-  --fav-background: #352F44;
-  --text-color: #DBD8E3;
-  --error-color: #CA3E47; */
 :root {
   --background: #082032;
   --content-background: #2c394b;
   --button-background: #af0404;
-  --input-background: #6d5d6e;
-  /* --input-background: #2D4263; */
-  --card-background: #b4a5a5;
+  --input-background: #45628b;
+  --card-background: #060930;
   --fav-background: #352f44;
-  --text-color: #dbd8e3;
+  --text-color: #cde7f8;
   --error-color: #ca3e47;
 }
 
@@ -27,7 +17,7 @@
 
 /* Main div */
 .movie-search-container {
-  width: 70%;
+  width: 90%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -110,6 +100,32 @@
   color: var(--text-color);
 }
 
+.header-part .advanced-search .accordion-button {
+  display: inline-block;
+  text-align: center;
+  background: var(--content-background);
+  color: var(--text-color);
+}
+
+.accordion-item:first-of-type .accordion-button {
+  border-radius: 7px;
+}
+
+.header-part .advanced-search .accordion-button:not(.collapsed) {
+  box-shadow: inset 0 calc(-1 * var(--bs-accordion-border-width)) 0 var(--content-background);
+}
+
+.header-part .advanced-search .accordion-button:focus {
+  z-index: 3;
+  border-color: var(--content-background);
+  outline: 0;
+  box-shadow: var(--content-background);
+}
+
+.header-part .advanced-search .accordion-item {
+  border: none;
+  background: var(--content-background);
+}
 .header-part .advanced-search .adv-search-criteria {
   display: flex;
   flex-direction: row;
@@ -130,17 +146,31 @@
 .header-part .advanced-search .adv-search-criteria select {
   height: 30px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 3px;
   border: none;
   background: var(--input-background);
+  color: var(--text-color);
+  width: 150px;
 }
 
 .header-part .advanced-search .adv-search-criteria input {
   height: 30px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 3px;
   background: var(--input-background);
   border: none;
+  width: 150px;
+}
+
+.header-part .advanced-search .adv-search-criteria .search-year {
+  margin-left: 3px;
+}
+
+.header-part .advanced-search .adv-search-criteria {
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /* Content */
@@ -238,6 +268,10 @@
 
 .card {
   background: var(--card-background);
+}
+
+.card .card-body {
+  color: var(--text-color);
 }
 
 .card:hover {

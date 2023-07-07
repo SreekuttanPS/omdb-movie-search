@@ -5,7 +5,7 @@ import {
   Button,
   Form,
 } from 'reactstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 import StarRating from 'components/movie-hunter/StarRating';
@@ -34,18 +34,6 @@ export default function MovieInfo() {
 
   return (
     <div className="movie-info-section">
-      <ToastContainer
-        position="top-right"
-        autoClose={7000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-      />
       {isLoading ? (
         <div className="info-loading container w-100 p-5 text-center">
           <div className="spinner-border text-dark" role="status">

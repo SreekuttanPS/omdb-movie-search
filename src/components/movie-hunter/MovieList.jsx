@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -10,6 +10,7 @@ import {
   PaginationItem,
   PaginationLink,
 } from 'reactstrap';
+import { toast } from 'react-toastify';
 
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
@@ -17,7 +18,24 @@ import noImage from 'assets/no-image.jpeg';
 
 export default function MovieList() {
   const navigate = useNavigate();
-  const [moviesList, isFetchingData] = useOutletContext();
+  const [apiResponse, isFetchingData] = useOutletContext();
+  const [moviesList, setMoviesList] = useState([]);
+
+  useEffect(() => {
+    const movieArray = apiResponse.map((item) => Object.assign(item, { isFav: false }));
+    setMoviesList(movieArray);
+  }, [apiResponse]);
+
+  const addToFav = (index) => {
+    const allMovies = [...moviesList];
+    const favMovie = {
+      ...allMovies[index],
+      isFav: !allMovies[index].isFav,
+    };
+    allMovies[index] = favMovie;
+    toast.success(!allMovies[index].isFav ? 'Removed from favourites!' : 'Added to favourites!');
+    setMoviesList(allMovies);
+  };
 
   return (
     <>
@@ -30,7 +48,7 @@ export default function MovieList() {
           ) : (
             ''
           )}
-          {moviesList.map((item) => (
+          {moviesList.map((item, index) => (
             <div className="col-12 col-md-6 col-lg-3 mx-2 mt-3 mb-5" key={item.imdbID}>
               <div className="movie-card">
                 <div className="movie-card-content">
@@ -78,10 +96,25 @@ export default function MovieList() {
                 </Button>
                 <Button
                   className="add-to-fav-button"
+                  onClick={() => addToFav(index)}
                 >
-                  Add to favourites
-                  <img className="favourite-icon" src={favourite} alt="" />
-                  <img className="not-favourite-icon" src={notFavourite} alt="" />
+                  {item.isFav
+                    ? (
+                      <>
+                        <span>
+                          Added to favourites!
+                        </span>
+                        <img className="favourite-icon" src={favourite} alt="" />
+                      </>
+                    )
+                    : (
+                      <>
+                        <span>
+                          Add to favourites
+                        </span>
+                        <img className="not-favourite-icon" src={notFavourite} alt="" />
+                      </>
+                    )}
                 </Button>
               </div>
             </div>
@@ -90,58 +123,60 @@ export default function MovieList() {
       </div>
       <div className="footer-section">
         <div className="pagination-section">
-          <Pagination size="sm">
-            <PaginationItem>
-              <PaginationLink
-                first
-                href="#"
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                href="#"
-                previous
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                3
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                4
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                5
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                href="#"
-                next
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                href="#"
-                last
-              />
-            </PaginationItem>
-          </Pagination>
-
+          {moviesList.length > 10
+            ? (
+              <Pagination size="sm">
+                <PaginationItem>
+                  <PaginationLink
+                    first
+                    href="#"
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    previous
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">
+                    1
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">
+                    2
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">
+                    3
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">
+                    4
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">
+                    5
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    next
+                  />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    href="#"
+                    last
+                  />
+                </PaginationItem>
+              </Pagination>
+            ) : ''}
         </div>
       </div>
     </>
