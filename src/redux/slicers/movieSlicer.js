@@ -26,6 +26,7 @@ export const movieSlicer = createSlice({
   initialState: {
     isLoading: false,
     moviesList: [],
+    favMovieList: [],
     totalResults: 0,
     currentSelectedMovie: {},
     error: '',
@@ -48,12 +49,33 @@ export const movieSlicer = createSlice({
               : 'Added to favourites!',
           );
 
+          if (!movie.isFavourite) {
+            state.favMovieList.push(movie);
+          } else {
+            const index = state.favMovieList.findIndex(
+              (item) => item.imdbID === action.payload,
+            );
+            state.favMovieList.splice(index, 1);
+          }
+
           return Object.assign(movie, {
             isFavourite: !movie.isFavourite,
           });
         }
         return movie;
       });
+    },
+    removeFromFav: (state, action) => {
+      let index;
+      state.favMovieList.forEach((movie) => {
+        if (movie.imdbID === action.payload) {
+          index = state.favMovieList.findIndex(
+            (item) => item.imdbID === action.payload,
+          );
+          toast.success('Removed from favourites!');
+        }
+      });
+      state.favMovieList.splice(index, 1);
     },
   },
   extraReducers(builder) {
@@ -66,9 +88,21 @@ export const movieSlicer = createSlice({
         if (action.payload.Response === 'True') {
           state.error = '';
           state.totalResults = action.payload.totalResults;
-          state.moviesList = action.payload.Search.map((item) => Object.assign(item, {
-            isFavourite: false,
-          }));
+          state.moviesList = action.payload.Search.map((item) => {
+            const isAddedToFav = state.favMovieList.find(
+              (favMovie) => favMovie.imdbID === item.imdbID,
+            );
+            if (isAddedToFav) {
+              Object.assign(item, {
+                isFavourite: true,
+              });
+            } else {
+              Object.assign(item, {
+                isFavourite: false,
+              });
+            }
+            return item;
+          });
         } else {
           state.error = action.payload.Error;
         }
@@ -94,7 +128,11 @@ export const movieSlicer = createSlice({
 });
 
 export const {
-  getMoviesList, resetMoviesList, getMovieInfo, addMovieToFav,
+  getMoviesList,
+  resetMoviesList,
+  getMovieInfo,
+  addMovieToFav,
+  removeFromFav,
 } = movieSlicer.actions;
 
 export default movieSlicer.reducer;

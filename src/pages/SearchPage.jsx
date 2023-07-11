@@ -4,7 +4,9 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import {
+  Outlet, useNavigate, useParams, Link,
+} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   UncontrolledAccordion, AccordionHeader, AccordionItem, AccordionBody,
@@ -80,6 +82,9 @@ export default function SearchPage() {
         <div className="header-part">
           <div className="logo-part">
             <img src={logo} alt="" />
+          </div>
+          <div className="w-100 text-end mb-3">
+            <Link className="go-to-fav" to="/favourites">{'Go to your favourites >>'}</Link>
           </div>
           <div className="searchbar">
             <div className="input-section">

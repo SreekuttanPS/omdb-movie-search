@@ -7,6 +7,7 @@
   --fav-background: #352f44;
   --text-color: #cde7f8;
   --error-color: #ca3e47;
+  --link-color: #ED2B2A;
 }
 
 /* Movie Hunter */
@@ -172,6 +173,15 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.go-to-fav {
+  color: white;
+  text-decoration: none;
+}
+
+.go-to-fav:hover {
+  font-size:105%;
 }
 
 /* Content */
