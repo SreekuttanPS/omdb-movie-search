@@ -5,50 +5,24 @@ import React, {
   useCallback,
 } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   UncontrolledAccordion, AccordionHeader, AccordionItem, AccordionBody,
 } from 'reactstrap';
 
+import { fetchMoviesList, resetMoviesList } from 'redux/slicers/movieSlicer';
+
 import logo from 'assets/logo.gif';
 
-const baseUrl = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&plot=full`; // &type=movie&s=
-
 export default function SearchPage() {
-  const [isFetchingData, setIsFetchingData] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [apiResponse, setApiResponse] = useState([]);
-
+  const dispatch = useDispatch();
+  const moviesList = useSelector((state) => state.movies);
   const searchTextRef = useRef(null);
   const searchYearRef = useRef(null);
   const searchTypeRef = useRef(null);
-  const isInitialMount = useRef(true);
   const navigate = useNavigate();
   const { searchText, movieTitle } = useParams();
-
-  const movieListFetch = useCallback(
-    (url) => {
-      setIsFetchingData(true);
-
-      navigate(`/search/${searchTextRef.current.value}`);
-      axios
-        .get(url)
-        .then((response) => {
-          setIsFetchingData(false);
-          if (response.data.Response === 'True') {
-            setApiResponse(response.data.Search);
-          } else {
-            toast.error(`Oops! ${response.data.Error}`);
-          }
-        })
-        .catch((error) => {
-          setIsFetchingData(false);
-          toast.error(`Oops! ${error}`);
-        });
-    },
-    [navigate],
-  );
 
   const searchValidation = () => {
     if (searchTextRef.current.value === '') {
@@ -65,21 +39,20 @@ export default function SearchPage() {
   };
 
   const onSearch = useCallback(() => {
-    let url;
-    // console.log('errorMessage: ', errorMessage);
+    let searchCriterias = '';
+    searchValidation();
 
     if (searchTextRef.current.value !== '' && searchYearRef.current.validity.valid) {
-      console.log('hit: ');
-
-      setApiResponse([]);
       if (searchYearRef.current.value !== '') {
-        url = `${baseUrl}&s=${searchTextRef.current.value}&type=${searchTypeRef.current.value}&y=${searchYearRef.current.value}`;
+        searchCriterias = `&s=${searchTextRef.current.value}&type=${searchTypeRef.current.value}&y=${searchYearRef.current.value}`;
       } else {
-        url = `${baseUrl}&s=${searchTextRef.current.value}&type=${searchTypeRef.current.value}`;
+        searchCriterias = `&s=${searchTextRef.current.value}&type=${searchTypeRef.current.value}`;
       }
-      movieListFetch(url);
+      dispatch(resetMoviesList());
+      dispatch(fetchMoviesList(searchCriterias));
+      navigate(`/search/${searchTextRef.current.value}`);
     }
-  }, [movieListFetch]);
+  }, []);
 
   const handleKeyUp = (event) => {
     if (event.key === 'Enter') {
@@ -96,11 +69,10 @@ export default function SearchPage() {
     } else {
       searchTextRef.current.value = '';
     }
-    if (searchText && isInitialMount.current) {
-      onSearch();
+    if (!moviesList.length && searchText) {
+      dispatch(fetchMoviesList(`&s=${searchText}`));
     }
-    isInitialMount.current = false;
-  }, [onSearch, searchText, movieTitle]);
+  }, []);
 
   return (
     <div className="movie-search-body">
@@ -128,7 +100,7 @@ export default function SearchPage() {
                 onMouseUp={searchValidation}
                 onClick={onSearch}
               >
-                {isFetchingData ? (
+                {moviesList.isLoading ? (
                   <span
                     className="spinner-border spinner-border-sm mx-1"
                     role="status"
@@ -191,7 +163,7 @@ export default function SearchPage() {
             </UncontrolledAccordion>
           </div>
         </div>
-        <Outlet context={[apiResponse, isFetchingData]} />
+        <Outlet />
       </div>
     </div>
   );

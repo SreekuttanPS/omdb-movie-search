@@ -1,40 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import {
   Button,
   Form,
 } from 'reactstrap';
-import { toast } from 'react-toastify';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { fetchMovieInfo } from 'redux/slicers/movieSlicer';
 import StarRating from 'components/movie-hunter/StarRating';
-
-const url = `https://www.omdbapi.com/?apikey=${import.meta.env.VITE_API_KEY}&type=movie&plot=full`;
 
 export default function MovieInfo() {
   const { imdbId } = useParams();
   const navigate = useNavigate();
-  const [movieInfo, setMovieInfo] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const movieInfo = useSelector((state) => state.movies.currentSelectedMovie);
+  const loader = useSelector((state) => state.movies.isLoading);
 
   useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`${url}&i=${imdbId}`)
-      .then((response) => {
-        setIsLoading(false);
-        setMovieInfo(response.data);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        toast.error(`Oops! ${error}`);
-      });
-  }, [imdbId]);
+    dispatch(fetchMovieInfo(imdbId));
+  }, []);
 
   return (
     <div className="movie-info-section">
-      {isLoading ? (
+      {loader ? (
         <div className="info-loading container w-100 p-5 text-center">
           <div className="spinner-border text-dark" role="status">
             <span className="visually-hidden">Loading...</span>

@@ -1,54 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardBody,
   CardText,
   Button,
   CardTitle,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
 } from 'reactstrap';
-import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { addMovieToFav } from 'redux/slicers/movieSlicer';
 
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
 import noImage from 'assets/no-image.jpeg';
+import PaginationComponent from 'components/movie-hunter/PaginationComponent';
 
 export default function MovieList() {
   const navigate = useNavigate();
-  const [apiResponse, isFetchingData] = useOutletContext();
-  const [moviesList, setMoviesList] = useState([]);
-
-  useEffect(() => {
-    const movieArray = apiResponse.map((item) => Object.assign(item, { isFav: false }));
-    setMoviesList(movieArray);
-  }, [apiResponse]);
-
-  const addToFav = (index) => {
-    const allMovies = [...moviesList];
-    const favMovie = {
-      ...allMovies[index],
-      isFav: !allMovies[index].isFav,
-    };
-    allMovies[index] = favMovie;
-    toast.success(!allMovies[index].isFav ? 'Removed from favourites!' : 'Added to favourites!');
-    setMoviesList(allMovies);
-  };
+  const moviesList = useSelector((state) => state.movies.moviesList);
+  const error = useSelector((state) => state.movies.error);
+  const totalResults = useSelector((state) => state.movies.totalResults);
+  const dispatch = useDispatch();
 
   return (
     <>
-      <div className="content-section">
+      <div className="content-section w-100">
         <div className="row my-3 movie-list-section">
-          {!moviesList.length && !isFetchingData ? (
+          {error ? (
             <span className="text-danger m-5">
-              Some error occured, Please try again!
+              {error}
             </span>
           ) : (
             ''
           )}
-          {moviesList.map((item, index) => (
+          {moviesList.map((item) => (
             <div className="col-12 col-md-6 col-lg-3 mx-2 mt-3 mb-5" key={item.imdbID}>
               <div className="movie-card">
                 <div className="movie-card-content">
@@ -96,9 +82,9 @@ export default function MovieList() {
                 </Button>
                 <Button
                   className="add-to-fav-button"
-                  onClick={() => addToFav(index)}
+                  onClick={() => dispatch(addMovieToFav(item.imdbID))}
                 >
-                  {item.isFav
+                  {item.isFavourite
                     ? (
                       <>
                         <span>
@@ -122,62 +108,11 @@ export default function MovieList() {
         </div>
       </div>
       <div className="footer-section">
-        <div className="pagination-section">
-          {moviesList.length > 10
-            ? (
-              <Pagination size="sm">
-                <PaginationItem>
-                  <PaginationLink
-                    first
-                    href="#"
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    previous
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">
-                    3
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">
-                    4
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">
-                    5
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    next
-                  />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    href="#"
-                    last
-                  />
-                </PaginationItem>
-              </Pagination>
-            ) : ''}
-        </div>
+        {totalResults > 10 ? (
+          <div className="pagination-section">
+            <PaginationComponent />
+          </div>
+        ) : ''}
       </div>
     </>
   );
