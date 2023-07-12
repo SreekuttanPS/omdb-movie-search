@@ -30,7 +30,7 @@ export default function MovieInfo() {
         </div>
       ) : (
         <div className="container w-100">
-          <Form className="text-secondary">
+          <Form className="movie-info-form">
             <h2>{movieInfo?.Title}</h2>
             <img className="movie-info-image" src={movieInfo?.Poster} alt="" />
             <div className="movie-info-description d-grid gap-2 d-md-block">
@@ -38,6 +38,8 @@ export default function MovieInfo() {
                 IMDb Rating :
                 {' '}
                 {movieInfo?.imdbRating}
+                {' '}
+                /10
               </span>
               {Object.keys(movieInfo).length > 0 ? (
                 <span className="w-100">

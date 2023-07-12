@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -19,6 +19,22 @@ export default function FavMovieList() {
   const navigate = useNavigate();
   const favMoviesList = useSelector((state) => state.movies.favMovieList);
   const dispatch = useDispatch();
+  const [favSearch, setFavSearch] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    if (favSearch.length > 0 && favMoviesList.length > 0) {
+      const temporary = [];
+      favMoviesList.forEach((item) => {
+        if (item.Title.toLowerCase().includes(favSearch.toLowerCase())) {
+          temporary.push(item);
+        }
+      });
+      setSearchResults(temporary);
+    } else {
+      setSearchResults(favMoviesList);
+    }
+  }, [favSearch, favMoviesList]);
 
   return (
     <div className="content-section w-100">
@@ -26,9 +42,21 @@ export default function FavMovieList() {
         <h3 className="text-white">
           Favourites
         </h3>
-        <Link className="go-to-fav text-start" to="/">{'<< Go back Home'}</Link>
 
-        {favMoviesList.length ? favMoviesList.map((item) => (
+        <div className="searchbar">
+          <div className="input-section">
+            <input
+              aria-label="Search contacts"
+              placeholder="Search in favorites..."
+              type="search"
+              name="search"
+              autoComplete="off"
+              onChange={(e) => setFavSearch(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {searchResults.length ? searchResults.map((item) => (
           <div className="col-12 col-md-6 col-lg-3 mx-2 mt-3 mb-5" key={item.imdbID}>
             <div className="movie-card">
               <div className="movie-card-content">
@@ -71,7 +99,6 @@ export default function FavMovieList() {
                 }}
               >
                 More Details
-                {' '}
                 {' >>'}
               </Button>
               <Button
@@ -98,7 +125,7 @@ export default function FavMovieList() {
               </Button>
             </div>
           </div>
-        )) : <span className="text-danger mt-5"> You have no favourites! </span>}
+        )) : <span className="text-danger mt-5"> No favourites found! </span>}
       </div>
     </div>
   );

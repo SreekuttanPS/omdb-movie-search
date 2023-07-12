@@ -9,7 +9,16 @@ import {
 } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  UncontrolledAccordion, AccordionHeader, AccordionItem, AccordionBody,
+  UncontrolledAccordion,
+  AccordionHeader,
+  AccordionItem,
+  AccordionBody,
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
 } from 'reactstrap';
 
 import { fetchMoviesList, resetMoviesList } from 'redux/slicers/movieSlicer';
@@ -18,13 +27,19 @@ import logo from 'assets/logo.gif';
 
 export default function SearchPage() {
   const [errorMessage, setErrorMessage] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [favouritesPage, setFavouritesPage] = useState(false);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { searchText } = useParams();
   const moviesList = useSelector((state) => state.movies);
+
   const searchTextRef = useRef(null);
   const searchYearRef = useRef(null);
   const searchTypeRef = useRef(null);
-  const navigate = useNavigate();
-  const { searchText, movieTitle } = useParams();
+
+  const toggle = () => setIsOpen(!isOpen);
 
   const searchValidation = () => {
     if (searchTextRef.current.value === '') {
@@ -66,27 +81,58 @@ export default function SearchPage() {
   useEffect(() => {
     if (searchText) {
       searchTextRef.current.value = searchText;
-    } else if (movieTitle) {
-      searchTextRef.current.value = movieTitle;
     } else {
       searchTextRef.current.value = '';
     }
+  }, [searchText]);
+
+  useEffect(() => {
     if (!moviesList.length && searchText) {
       dispatch(fetchMoviesList(`&s=${searchText}`));
     }
   }, []);
 
+  useEffect(() => {
+    if (window.location.pathname === '/favourites') {
+      setFavouritesPage(true);
+    } else {
+      setFavouritesPage(false);
+    }
+  }, [window.location.pathname]);
+
   return (
     <div className="movie-search-body">
       <div className="container movie-search-container text-center">
         <div className="header-part">
-          <div className="logo-part">
-            <img src={logo} alt="" />
+          <div className="nav-bar-contents">
+            <Navbar>
+              <NavbarBrand href="/">
+                <div className="logo-part">
+                  <img src={logo} alt="" />
+                </div>
+              </NavbarBrand>
+              <Nav className="me-auto large-dev-nav d-none d-md-block" navbar>
+                <NavItem className="navbar-item mx-2">
+                  <Link className="nav-link btn btn-outline-secondary" to="/favourites">Favourites</Link>
+                </NavItem>
+                <NavItem className="mx-2">
+                  <Link className="nav-link  btn btn-outline-secondary" to="/">Home</Link>
+                </NavItem>
+              </Nav>
+              <NavbarToggler className="nav-bar-toggler d-md-none" onClick={toggle} />
+              <Collapse isOpen={isOpen} navbar className="d-md-none">
+                <Nav className="me-auto" navbar>
+                  <NavItem>
+                    <Link className="nav-link" to="/">Home</Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link className="nav-link" to="/favourites">Favourites</Link>
+                  </NavItem>
+                </Nav>
+              </Collapse>
+            </Navbar>
           </div>
-          <div className="w-100 text-end mb-3">
-            <Link className="go-to-fav" to="/favourites">{'Go to your favourites >>'}</Link>
-          </div>
-          <div className="searchbar">
+          <div className={`searchbar ${favouritesPage ? 'd-none' : ''}`}>
             <div className="input-section">
               <input
                 ref={searchTextRef}
@@ -122,10 +168,11 @@ export default function SearchPage() {
               ''
             )}
           </div>
-          <div className="advanced-search">
+
+          <div className={`advanced-search ${favouritesPage ? 'd-none' : ''}`}>
             <UncontrolledAccordion stayOpen>
               <AccordionItem>
-                <AccordionHeader targetId="1">
+                <AccordionHeader targetId="1" className="accord-header text-center">
                   Advanced search ▽
                 </AccordionHeader>
                 <AccordionBody accordionId="1">

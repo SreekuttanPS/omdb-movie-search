@@ -34,6 +34,28 @@
   width: 100%;
 }
 
+.header-part .nav-bar-contents .large-dev-nav {
+  display: -webkit-inline-box;
+  position: relative;
+}
+
+.header-part .nav-bar-contents .nav-link {
+  color: var(--text-color);
+}
+
+.header-part .nav-bar-contents .nav-link:hover {
+  font-size:120%;
+}
+
+.header-part .nav-bar-contents .navbar-item {
+  position: absolute;
+  left: 100%;
+}
+
+.header-part .nav-bar-contents .nav-bar-toggler {
+  background: var(--text-color);
+}
+
 .header-part .logo-part {
   margin-bottom: 13px;
   margin-top: 13px;
@@ -44,7 +66,7 @@
   max-width: 224px;
 }
 
-.header-part .searchbar .input-section input {
+.searchbar .input-section input {
   height: 40px;
   background: var(--input-background);
   color: var(--text-color);
@@ -55,7 +77,7 @@
   border: none;
 }
 
-.header-part .searchbar .input-section input::-webkit-input-placeholder {
+searchbar .input-section input::-webkit-input-placeholder {
   color: var(--text-color);
 }
 
@@ -64,7 +86,7 @@
   opacity: 1;
 }
 
-.header-part .searchbar .input-section input::-moz-placeholder {
+searchbar .input-section input::-moz-placeholder {
   color: var(--text-color);
   opacity: 1;
 }
@@ -73,15 +95,15 @@
   color: var(--text-color);
 }
 
-.header-part .searchbar .input-section input::-ms-input-placeholder {
+.searchbar .input-section input::-ms-input-placeholder {
   color: var(--text-color);
 }
 
-.header-part .searchbar .input-section input::placeholder {
+.searchbar .input-section input::placeholder {
   color: var(--text-color);
 }
 
-.header-part .searchbar .input-section .search-button {
+.searchbar .input-section .search-button {
   height: 40px;
   background: var(--button-background);
   color: var(--text-color);
@@ -92,7 +114,7 @@
   width: 100px;
 }
 
-.header-part .searchbar .error-msg {
+.searchbar .error-msg {
   color: var(--error-color);
 }
 
@@ -106,6 +128,8 @@
   text-align: center;
   background: var(--content-background);
   color: var(--text-color);
+  width: 25%;
+  min-width: 180px;
 }
 
 .accordion-item:first-of-type .accordion-button {
@@ -297,6 +321,9 @@
 .movie-info-section .movie-info-description span::after {
   content: "\a";
   white-space: pre;
+}
+.movie-info-section .movie-info-form {
+  color: var(--text-color);
 }
 
 .movie-info-section .info-loading {
