@@ -1,31 +1,35 @@
 import React from 'react';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   CardBody,
   CardText,
   Button,
   CardTitle,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
 } from 'reactstrap';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { addMovieToFav } from 'redux/slicers/movieSlicer';
 
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
 import noImage from 'assets/no-image.jpeg';
+import PaginationComponent from 'components/movie-hunter/PaginationComponent';
 
 export default function MovieList() {
   const navigate = useNavigate();
-  const [moviesList, isFetchingData] = useOutletContext();
+  const moviesList = useSelector((state) => state.movies.moviesList);
+  const error = useSelector((state) => state.movies.error);
+  const totalResults = useSelector((state) => state.movies.totalResults);
+  const dispatch = useDispatch();
 
   return (
     <>
-      <div className="content-section">
+      <div className="content-section w-100">
         <div className="row my-3 movie-list-section">
-          {!moviesList.length && !isFetchingData ? (
+          {error ? (
             <span className="text-danger m-5">
-              Some error occured, Please try again!
+              {error}
             </span>
           ) : (
             ''
@@ -78,10 +82,25 @@ export default function MovieList() {
                 </Button>
                 <Button
                   className="add-to-fav-button"
+                  onClick={() => dispatch(addMovieToFav(item.imdbID))}
                 >
-                  Add to favourites
-                  <img className="favourite-icon" src={favourite} alt="" />
-                  <img className="not-favourite-icon" src={notFavourite} alt="" />
+                  {item.isFavourite
+                    ? (
+                      <>
+                        <span>
+                          Added to favourites!
+                        </span>
+                        <img className="favourite-icon" src={favourite} alt="" />
+                      </>
+                    )
+                    : (
+                      <>
+                        <span>
+                          Add to favourites
+                        </span>
+                        <img className="not-favourite-icon" src={notFavourite} alt="" />
+                      </>
+                    )}
                 </Button>
               </div>
             </div>
@@ -89,60 +108,11 @@ export default function MovieList() {
         </div>
       </div>
       <div className="footer-section">
-        <div className="pagination-section">
-          <Pagination size="sm">
-            <PaginationItem>
-              <PaginationLink
-                first
-                href="#"
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                href="#"
-                previous
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                1
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                3
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                4
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">
-                5
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                href="#"
-                next
-              />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink
-                href="#"
-                last
-              />
-            </PaginationItem>
-          </Pagination>
-
-        </div>
+        {totalResults > 10 ? (
+          <div className="pagination-section">
+            <PaginationComponent />
+          </div>
+        ) : ''}
       </div>
     </>
   );
