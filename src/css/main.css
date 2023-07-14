@@ -7,7 +7,7 @@
   --fav-background: #352f44;
   --text-color: #cde7f8;
   --error-color: #ca3e47;
-  --link-color: #ED2B2A;
+  --link-color: #ed2b2a;
 }
 
 /* Movie Hunter */
@@ -44,7 +44,7 @@
 }
 
 .header-part .nav-bar-contents .nav-link:hover {
-  font-size:120%;
+  font-size: 120%;
 }
 
 .header-part .nav-bar-contents .navbar-item {
@@ -205,13 +205,46 @@ searchbar .input-section input::-moz-placeholder {
 }
 
 .go-to-fav:hover {
-  font-size:105%;
+  font-size: 105%;
 }
 
 /* Content */
 .content-section .movie-list-section {
   display: flex;
   justify-content: center;
+}
+
+.content-section .movie-list-section .favourites-nav .container-fluid {
+  justify-content: end;
+}
+
+.content-section .movie-list-section .favourites-nav .nav {
+  background: #fafafa;
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.content-section .movie-list-section .favourites-nav .nav li {
+  width: 60px;
+  text-align: center;
+  font-size: 15px;
+}
+@media screen and (max-width: 566px) {
+  .content-section .movie-list-section .favourites-nav .nav li {
+    width: 43px;
+    text-align: center;
+    font-size: 13px;
+  }
+}
+
+.content-section .movie-list-section .favourites-nav .nav img {
+  width: 30px;
+  margin-bottom: -7px;
+}
+
+.content-section .movie-list-section .favourites-nav .nav button {
+  background: #fafafa;
+  border: none;
 }
 
 .content-section .movie-card {
@@ -387,7 +420,7 @@ searchbar .input-section input::-moz-placeholder {
 }
 @media screen and (min-width: 566px) {
   .footer-section .pagination-section ul li a {
-     font-size: 16px;
+    font-size: 16px;
   }
 }
 
@@ -418,4 +451,3 @@ searchbar .input-section input::-moz-placeholder {
   border: 2px solid var(--button-background);
   background-color: var(--button-background);
 }
-

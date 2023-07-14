@@ -93,7 +93,7 @@ export default function SearchPage() {
   }, []);
 
   useEffect(() => {
-    if (window.location.pathname === '/favourites') {
+    if (window.location.pathname === '/favourites' || window.location.pathname === '/trash') {
       setFavouritesPage(true);
     } else {
       setFavouritesPage(false);

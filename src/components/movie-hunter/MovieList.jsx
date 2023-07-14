@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { addMovieToFav } from 'redux/slicers/movieSlicer';
+import { addToFav, removeFromFav } from 'redux/slicers/favouriteSlicer';
 
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
@@ -21,6 +21,8 @@ export default function MovieList() {
   const moviesList = useSelector((state) => state.movies.moviesList);
   const error = useSelector((state) => state.movies.error);
   const totalResults = useSelector((state) => state.movies.totalResults);
+  const favouritesList = useSelector((state) => state.favourites.present);
+
   const dispatch = useDispatch();
 
   return (
@@ -80,28 +82,32 @@ export default function MovieList() {
                   {' '}
                   {' >>'}
                 </Button>
-                <Button
-                  className="add-to-fav-button"
-                  onClick={() => dispatch(addMovieToFav(item.imdbID))}
-                >
-                  {item.isFavourite
+
+                {
+                  favouritesList.favList.find((element) => element.imdbID === item.imdbID)
                     ? (
-                      <>
+                      <Button
+                        className="add-to-fav-button"
+                        onClick={() => dispatch(removeFromFav(item.imdbID))}
+                      >
                         <span>
-                          Added to favourites!
+                          Remove favourites!
                         </span>
                         <img className="favourite-icon" src={favourite} alt="" />
-                      </>
+                      </Button>
                     )
                     : (
-                      <>
+                      <Button
+                        className="add-to-fav-button"
+                        onClick={() => dispatch(addToFav(item))}
+                      >
                         <span>
                           Add to favourites
                         </span>
                         <img className="not-favourite-icon" src={notFavourite} alt="" />
-                      </>
-                    )}
-                </Button>
+                      </Button>
+                    )
+                }
               </div>
             </div>
           ))}

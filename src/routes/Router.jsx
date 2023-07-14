@@ -6,6 +6,7 @@ import ErrorPage from 'pages/ErrorPage';
 import MovieList from 'components/movie-hunter/MovieList';
 import MovieInfo from 'components/movie-hunter/MovieInfo';
 import FavMovieList from 'components/movie-hunter/FavMovieList';
+import Trash from 'components/movie-hunter/Trash';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
       {
         path: '/favourites',
         element: <FavMovieList />,
+      },
+      {
+        path: '/trash',
+        element: <Trash />,
       },
     ],
   },
