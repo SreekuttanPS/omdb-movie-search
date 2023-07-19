@@ -6,7 +6,7 @@ import { fetchMoviesList } from 'redux/slicers/movieSlicer';
 import { useParams } from 'react-router-dom';
 
 function PaginationComponent() {
-  const totalResults = useSelector((state) => state.movies.totalResults);
+  const totalResults = useSelector((state) => state.reduxState.movies.totalResults);
   const totalPages = Math.ceil((Number(totalResults)) / 10);
   const pagesArray = [];
 

@@ -2,15 +2,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import throttle from 'lodash.throttle';
 
 import { baseUrl } from 'helpers/utils';
 
 export const fetchMoviesList = createAsyncThunk(
   'movies/fetchMoviesList',
-  async (searchtexts) => {
-    const response = await axios.get(`${baseUrl}${searchtexts}`);
-    return response?.data;
-  },
+  throttle(
+    async (searchtexts) => {
+      const response = await axios.get(`${baseUrl}${searchtexts}`);
+      return response?.data;
+    },
+    300,
+    { trailing: false },
+  ),
 );
 
 export const fetchMovieInfo = createAsyncThunk(
@@ -29,12 +34,16 @@ export const movieSlicer = createSlice({
     totalResults: 0,
     currentSelectedMovie: {},
     error: '',
+    infiniteScroll: false,
   },
   reducers: {
     resetMoviesList: (state) => {
       state.moviesList = [];
       state.totalResults = 0;
       state.currentSelectedMovie = {};
+    },
+    setPageView: (state, action) => {
+      state.infiniteScroll = action.payload;
     },
   },
   extraReducers(builder) {
@@ -47,7 +56,11 @@ export const movieSlicer = createSlice({
         if (action.payload.Response === 'True') {
           state.error = '';
           state.totalResults = action.payload.totalResults;
-          state.moviesList = action.payload.Search;
+          if (state.infiniteScroll) {
+            state.moviesList = state.moviesList.concat(action.payload.Search);
+          } else {
+            state.moviesList = action.payload.Search;
+          }
         } else {
           state.error = action.payload.Error;
         }
@@ -72,6 +85,8 @@ export const movieSlicer = createSlice({
   },
 });
 
-export const { getMoviesList, resetMoviesList, getMovieInfo } = movieSlicer.actions;
+export const {
+  getMoviesList, resetMoviesList, getMovieInfo, setPageView,
+} = movieSlicer.actions;
 
 export default movieSlicer.reducer;

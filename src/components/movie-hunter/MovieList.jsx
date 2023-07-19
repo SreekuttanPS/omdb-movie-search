@@ -10,34 +10,32 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 
 import { addToFav, removeFromFav } from 'redux/slicers/favouriteSlicer';
+import PaginationComponent from 'components/movie-hunter/PaginationComponent';
+import { generateRandomString } from 'helpers/utils';
 
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
 import noImage from 'assets/no-image.jpeg';
-import PaginationComponent from 'components/movie-hunter/PaginationComponent';
 
 export default function MovieList() {
   const navigate = useNavigate();
-  const moviesList = useSelector((state) => state.movies.moviesList);
-  const error = useSelector((state) => state.movies.error);
-  const totalResults = useSelector((state) => state.movies.totalResults);
-  const favouritesList = useSelector((state) => state.favourites.present);
-
+  const movies = useSelector((state) => state.reduxState.movies);
+  const favouritesList = useSelector((state) => state.reduxState.favourites.present);
   const dispatch = useDispatch();
 
   return (
     <>
       <div className="content-section w-100">
         <div className="row my-3 movie-list-section">
-          {error ? (
+          {movies.error ? (
             <span className="text-danger m-5">
-              {error}
+              {movies.error}
             </span>
           ) : (
             ''
           )}
-          {moviesList.map((item) => (
-            <div className="col-12 col-md-6 col-lg-3 mx-2 mt-3 mb-5" key={item.imdbID}>
+          {movies.moviesList.map((item) => (
+            <div className="col-12 col-md-6 col-lg-3 mx-2 mt-3 mb-5" key={generateRandomString()}>
               <div className="movie-card">
                 <div className="movie-card-content">
                   <Card
@@ -113,13 +111,33 @@ export default function MovieList() {
           ))}
         </div>
       </div>
-      <div className="footer-section">
-        {totalResults > 10 ? (
-          <div className="pagination-section">
-            <PaginationComponent />
-          </div>
-        ) : ''}
-      </div>
+      {!movies.infiniteScroll ? (
+        <div className="footer-section">
+          {movies.totalResults > 10 ? (
+            <div className="pagination-section">
+              <PaginationComponent />
+            </div>
+          ) : ''}
+        </div>
+      ) : (
+        <div className="footer-section">
+          {movies.isLoading
+            ? (
+              <>
+                <div className="spinner-grow text-light mx-2 mb-3" role="status">
+                  <span className="sr-only" />
+                </div>
+                <div className="spinner-grow text-light mx-2 mb-3" role="status">
+                  <span className="sr-only" />
+                </div>
+                <div className="spinner-grow text-light mx-2 mb-3" role="status">
+                  <span className="sr-only" />
+                </div>
+              </>
+            ) : ''}
+        </div>
+
+      )}
     </>
   );
 }

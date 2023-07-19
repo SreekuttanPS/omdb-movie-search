@@ -21,24 +21,25 @@ import {
   NavItem,
 } from 'reactstrap';
 
-import { fetchMoviesList, resetMoviesList } from 'redux/slicers/movieSlicer';
+import { fetchMoviesList, resetMoviesList, setPageView } from 'redux/slicers/movieSlicer';
 
 import logo from 'assets/logo.gif';
 
 export default function SearchPage() {
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [favouritesPage, setFavouritesPage] = useState(false);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { searchText } = useParams();
-  const moviesList = useSelector((state) => state.movies);
+  const movies = useSelector((state) => state.reduxState.movies);
 
   const searchTextRef = useRef(null);
   const searchYearRef = useRef(null);
   const searchTypeRef = useRef(null);
-
+  const scrollRef = useRef(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [favouritesPage, setFavouritesPage] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [executed, setExecuted] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
   const searchValidation = () => {
@@ -78,6 +79,39 @@ export default function SearchPage() {
     }
   };
 
+  const pageViewHandle = (e) => {
+    if (e.target.value === 'infinite') {
+      dispatch(setPageView(true));
+    } else {
+      dispatch(setPageView(false));
+    }
+  };
+
+  const fetchNextPage = (infiniteScroll, totalResults) => {
+    if (!executed) {
+      setExecuted(true);
+      if (infiniteScroll && pageNumber < totalResults) {
+        dispatch(fetchMoviesList(`&s=${searchText}&page=${pageNumber + 1}`));
+        setPageNumber(pageNumber + 1);
+      }
+    }
+  };
+
+  window.onscroll = () => {
+    if (scrollRef.current && window.location.pathname === `/search/${searchText}`) {
+      const { scrollHeight } = scrollRef.current;
+      if (window.scrollY >= scrollHeight - window.innerHeight) {
+        fetchNextPage(movies.infiniteScroll, movies.totalResults);
+      }
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      setExecuted(false);
+    }, 1000);
+  }, [executed]);
+
   useEffect(() => {
     if (searchText) {
       searchTextRef.current.value = searchText;
@@ -87,7 +121,7 @@ export default function SearchPage() {
   }, [searchText]);
 
   useEffect(() => {
-    if (!moviesList.length && searchText) {
+    if (!movies.length && searchText) {
       dispatch(fetchMoviesList(`&s=${searchText}`));
     }
   }, []);
@@ -151,7 +185,7 @@ export default function SearchPage() {
                 onMouseUp={searchValidation}
                 onClick={onSearch}
               >
-                {moviesList.isLoading ? (
+                {movies.isLoading ? (
                   <span
                     className="spinner-border spinner-border-sm mx-1"
                     role="status"
@@ -204,8 +238,8 @@ export default function SearchPage() {
                     <div className="mt-2 advanced-select">
                       View :
                       {' '}
-                      <select name="view">
-                        <option value="paginated" defaultValue>Paginated View</option>
+                      <select name="view" onChange={pageViewHandle} defaultValue={movies.infiniteScroll ? 'infinite' : 'paginated'}>
+                        <option value="paginated">Paginated View</option>
                         <option value="infinite">Infinite Scroll</option>
                       </select>
                     </div>
@@ -215,7 +249,9 @@ export default function SearchPage() {
             </UncontrolledAccordion>
           </div>
         </div>
-        <Outlet />
+        <div ref={scrollRef}>
+          <Outlet />
+        </div>
       </div>
     </div>
   );

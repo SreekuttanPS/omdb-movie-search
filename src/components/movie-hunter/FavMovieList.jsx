@@ -14,6 +14,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreators } from 'redux-undo';
 
 import { moveToTrash } from 'redux/slicers/favouriteSlicer';
+import AlertBox from 'components/movie-hunter/AlertBox';
 
 import favourite from 'assets/favourite-icon.svg';
 import noImage from 'assets/no-image.jpeg';
@@ -24,10 +25,46 @@ import redoImage from 'assets/redo.png';
 
 export default function FavMovieList() {
   const navigate = useNavigate();
-  const favMoviesList = useSelector((state) => state.favourites);
+  const favMoviesList = useSelector((state) => state.reduxState.favourites);
   const dispatch = useDispatch();
   const [favSearch, setFavSearch] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [modal, setModal] = useState(false);
+
+  const multiSelect = (e, imdbID) => {
+    if (e.ctrlKey) {
+      const tempArray = [...selectedItems];
+      const found = tempArray.findIndex((element) => element === imdbID);
+      if (found !== -1) {
+        tempArray.splice(found, 1);
+        setSelectedItems(tempArray);
+      } else {
+        setSelectedItems((prevState) => [...prevState, imdbID]);
+      }
+    }
+  };
+
+  const removeItemHandle = (imdbID) => {
+    setSelectedItems((prevState) => [...prevState, imdbID]);
+    setModal(true);
+  };
+
+  const moveItemsToTrash = (bool) => {
+    setModal(false);
+    if (bool) {
+      dispatch(moveToTrash(selectedItems));
+      setSelectedItems([]);
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const onMultiDelete = () => {
+    if (selectedItems.length > 0) {
+      setModal(true);
+    }
+  };
 
   useEffect(() => {
     const temporaryArray = [];
@@ -46,7 +83,7 @@ export default function FavMovieList() {
       });
       setSearchResults(temporaryArray);
     }
-  }, [favSearch, favMoviesList.present]);
+  }, [favSearch, favMoviesList.present, selectedItems]);
 
   useEffect(() => {
     dispatch(ActionCreators.clearHistory());
@@ -78,6 +115,7 @@ export default function FavMovieList() {
               <button
                 type="button"
                 className="text-center"
+                onClick={onMultiDelete}
               >
                 <img src={binImage} alt="bin" title="Delete" />
 
@@ -120,7 +158,11 @@ export default function FavMovieList() {
 
         {searchResults.length ? searchResults.map((item) => (
           <div className="col-12 col-md-6 col-lg-3 mx-2 mt-3 mb-5" key={item.imdbID}>
-            <div className="movie-card">
+            <div
+              className={`movie-card ${(selectedItems.findIndex((element) => element === item.imdbID) !== -1 ? 'border-class' : '')}`}
+              onClick={(e) => multiSelect(e, item.imdbID)}
+              role="presentation"
+            >
               <div className="movie-card-content">
                 <Card
                   style={{
@@ -165,7 +207,7 @@ export default function FavMovieList() {
               </Button>
               <Button
                 className="add-to-fav-button"
-                onClick={() => dispatch(moveToTrash(item.imdbID))}
+                onClick={() => removeItemHandle(item.imdbID)}
               >
                 <span>
                   Remove
@@ -176,6 +218,12 @@ export default function FavMovieList() {
           </div>
         )) : <span className="text-danger mt-5"> No favourites found! </span>}
       </div>
+      <AlertBox
+        modal={modal}
+        modalClickHandle={moveItemsToTrash}
+        modalContent="Are you sure? Removed items will be moved to trash. You can undo the action by clicking the undo button."
+        modalTitle="Move to trash"
+      />
     </div>
   );
 }

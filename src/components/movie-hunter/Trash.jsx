@@ -12,7 +12,8 @@ import {
 } from 'reactstrap';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { moveToTrash } from 'redux/slicers/favouriteSlicer';
+import { removeFromTrash } from 'redux/slicers/favouriteSlicer';
+import AlertBox from 'components/movie-hunter/AlertBox';
 
 import favourite from 'assets/favourite-icon.svg';
 import noImage from 'assets/no-image.jpeg';
@@ -21,9 +22,26 @@ import helpImage from 'assets/help.png';
 
 export default function Trash() {
   const navigate = useNavigate();
-  const favMoviesList = useSelector((state) => state.favourites.present.favList);
+  const favMoviesList = useSelector((state) => state.reduxState.favourites.present.favList);
   const [trashList, setTrashList] = useState([]);
   const dispatch = useDispatch();
+  const [modal, setModal] = useState(false);
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  const permanentRemove = (bool) => {
+    setModal(false);
+    if (bool) {
+      dispatch(removeFromTrash(selectedItems));
+      setSelectedItems([]);
+    } else {
+      setSelectedItems([]);
+    }
+  };
+
+  const removeItem = (imdbID) => {
+    setSelectedItems((prevState) => [...prevState, imdbID]);
+    setModal(true);
+  };
 
   useEffect(() => {
     const trash = [];
@@ -112,7 +130,7 @@ export default function Trash() {
               </Button>
               <Button
                 className="add-to-fav-button"
-                onClick={() => dispatch(moveToTrash(item.imdbID))}
+                onClick={() => removeItem(item.imdbID)}
               >
                 <span>
                   Remove
@@ -123,6 +141,12 @@ export default function Trash() {
           </div>
         )) : <span className="text-danger mt-5"> Nothing in the trash! </span>}
       </div>
+      <AlertBox
+        modal={modal}
+        modalClickHandle={permanentRemove}
+        modalContent="Are you Sure? This cannot be undone."
+        modalTitle="Remove"
+      />
     </div>
   );
 }

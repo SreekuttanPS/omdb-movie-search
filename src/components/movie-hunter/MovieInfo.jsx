@@ -13,8 +13,8 @@ export default function MovieInfo() {
   const { imdbId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const movieInfo = useSelector((state) => state.movies.currentSelectedMovie);
-  const loader = useSelector((state) => state.movies.isLoading);
+  const movieInfo = useSelector((state) => state.reduxState.movies.currentSelectedMovie);
+  const loader = useSelector((state) => state.reduxState.movies.isLoading);
 
   useEffect(() => {
     dispatch(fetchMovieInfo(imdbId));

@@ -331,7 +331,13 @@ searchbar .input-section input::-moz-placeholder {
 }
 
 .movie-card {
+  min-height: 360px;
   display: -webkit-inline-box;
+}
+
+.border-class {
+  border-style: solid;
+  border-color: #cde7f8;
 }
 
 .card {
@@ -366,6 +372,14 @@ searchbar .input-section input::-moz-placeholder {
   .movie-info-section .info-loading {
     left: 0px;
   }
+}
+
+.modal-footer {
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #d3d3d3;
 }
 
 /* Footer */
@@ -450,4 +464,9 @@ searchbar .input-section input::-moz-placeholder {
   color: #fafafa;
   border: 2px solid var(--button-background);
   background-color: var(--button-background);
+}
+
+.spinner-grow {
+  width: 18px;
+  height: 18px;
 }

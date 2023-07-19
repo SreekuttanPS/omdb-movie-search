@@ -28,18 +28,37 @@ const favouriteSlicer = createSlice({
       state.favList.splice(index, 1);
     },
     moveToTrash: (state, action) => {
-      state.favList.forEach((movie) => {
-        if (movie.imdbID === action.payload) {
-          const index = state.favList.findIndex(
-            (item) => item.imdbID === action.payload,
-          );
-          state.favList[index].isTrash = true;
-        }
+      action.payload.forEach((imdbID) => {
+        state.favList.forEach((movie) => {
+          if (movie.imdbID === imdbID) {
+            const index = state.favList.findIndex(
+              (item) => item.imdbID === imdbID,
+            );
+            state.favList[index].isTrash = true;
+          }
+        });
+      });
+    },
+    removeFromTrash: (state, action) => {
+      let index = 0;
+      action.payload.forEach((imdbID) => {
+        state.favList.forEach((movie) => {
+          if (movie.imdbID === imdbID) {
+            index = state.favList.findIndex(
+              (item) => item.imdbID === imdbID,
+            );
+            if (index) {
+              state.favList.splice(index, 1);
+            }
+          }
+        });
       });
     },
   },
 });
 
-export const { addToFav, removeFromFav, moveToTrash } = favouriteSlicer.actions;
+export const {
+  addToFav, removeFromFav, moveToTrash, removeFromTrash,
+} = favouriteSlicer.actions;
 
 export default favouriteSlicer.reducer;
