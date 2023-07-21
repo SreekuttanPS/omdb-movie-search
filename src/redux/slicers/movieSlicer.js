@@ -35,6 +35,8 @@ export const movieSlicer = createSlice({
     currentSelectedMovie: {},
     error: '',
     infiniteScroll: false,
+    isLoggedIn: false,
+    userId: '',
   },
   reducers: {
     resetMoviesList: (state) => {
@@ -44,6 +46,10 @@ export const movieSlicer = createSlice({
     },
     setPageView: (state, action) => {
       state.infiniteScroll = action.payload;
+    },
+    setLoginInfo: (state, action) => {
+      state.isLoggedIn = action.payload.isLoggedIn;
+      state.userId = action.payload.email;
     },
   },
   extraReducers(builder) {
@@ -86,7 +92,7 @@ export const movieSlicer = createSlice({
 });
 
 export const {
-  getMoviesList, resetMoviesList, getMovieInfo, setPageView,
+  getMoviesList, resetMoviesList, getMovieInfo, setPageView, setLoginInfo,
 } = movieSlicer.actions;
 
 export default movieSlicer.reducer;

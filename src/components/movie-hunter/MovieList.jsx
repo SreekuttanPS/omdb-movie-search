@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -16,12 +16,34 @@ import { generateRandomString } from 'helpers/utils';
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
 import noImage from 'assets/no-image.jpeg';
+import LoginPopup from 'components/movie-hunter/LoginPopup';
 
 export default function MovieList() {
   const navigate = useNavigate();
   const movies = useSelector((state) => state.reduxState.movies);
   const favouritesList = useSelector((state) => state.reduxState.favourites.present);
+  const [modal, setModal] = useState(false);
   const dispatch = useDispatch();
+
+  const addToFavhandle = (item) => {
+    if (movies.isLoggedIn) {
+      dispatch(addToFav(item));
+    } else {
+      setModal(true);
+    }
+  };
+
+  const removeFromFavHandle = (imdbID) => {
+    if (movies.isLoggedIn) {
+      dispatch(removeFromFav(imdbID));
+    } else {
+      setModal(true);
+    }
+  };
+
+  const loginModalHandle = () => {
+    setModal(false);
+  };
 
   return (
     <>
@@ -86,7 +108,7 @@ export default function MovieList() {
                     ? (
                       <Button
                         className="add-to-fav-button"
-                        onClick={() => dispatch(removeFromFav(item.imdbID))}
+                        onClick={() => removeFromFavHandle(item.imdbID)}
                       >
                         <span>
                           Remove favourites!
@@ -97,7 +119,7 @@ export default function MovieList() {
                     : (
                       <Button
                         className="add-to-fav-button"
-                        onClick={() => dispatch(addToFav(item))}
+                        onClick={() => addToFavhandle(item)}
                       >
                         <span>
                           Add to favourites
@@ -138,6 +160,10 @@ export default function MovieList() {
         </div>
 
       )}
+      <LoginPopup
+        modalClickHandle={loginModalHandle}
+        modal={modal}
+      />
     </>
   );
 }
