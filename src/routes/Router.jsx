@@ -1,9 +1,12 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+
 import SearchPage from 'pages/SearchPage';
 import ErrorPage from 'pages/ErrorPage';
 import MovieList from 'components/movie-hunter/MovieList';
 import MovieInfo from 'components/movie-hunter/MovieInfo';
+import FavMovieList from 'components/movie-hunter/FavMovieList';
+import Trash from 'components/movie-hunter/Trash';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +21,14 @@ const router = createBrowserRouter([
       {
         path: '/:imdbId/:movieTitle/details',
         element: <MovieInfo />,
+      },
+      {
+        path: '/favourites',
+        element: <FavMovieList />,
+      },
+      {
+        path: '/trash',
+        element: <Trash />,
       },
     ],
   },
