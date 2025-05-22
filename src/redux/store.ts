@@ -27,13 +27,19 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
   reducer: {
-    reduxState: persistReducer(persistConfig, rootReducer),
+    persistedState: persistReducer<RootReducerState>(persistConfig, rootReducer),
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck: {
-      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-    },
-  }),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootReducerState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export const persistor = persistStore(store);

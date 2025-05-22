@@ -1,17 +1,22 @@
-import React from 'react';
 import {
   Modal, ModalHeader, ModalBody, ModalFooter, Button,
 } from 'reactstrap';
-import PropTypes from 'prop-types';
+
+type AlertBoxProps = {
+  isModalOpen: boolean;
+  modalClickHandle: (bool: boolean) => void;
+  modalContent: React.ReactNode;
+  modalTitle: string;
+};
 
 export default function AlertBox({
-  modal,
-  modalClickHandle,
+  isModalOpen,
   modalContent,
   modalTitle,
-}) {
+  modalClickHandle,
+}: AlertBoxProps) {
   return (
-    <Modal isOpen={modal} backdrop="static" centered>
+    <Modal isOpen={isModalOpen} backdrop="static" centered>
       <ModalHeader>{modalTitle}</ModalHeader>
       <ModalBody>
         {modalContent}
@@ -27,10 +32,3 @@ export default function AlertBox({
     </Modal>
   );
 }
-
-AlertBox.propTypes = {
-  modalClickHandle: PropTypes.func.isRequired,
-  modal: PropTypes.bool.isRequired,
-  modalContent: PropTypes.string.isRequired,
-  modalTitle: PropTypes.string.isRequired,
-};

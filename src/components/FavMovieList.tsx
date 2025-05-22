@@ -10,11 +10,12 @@ import {
   Navbar,
   NavItem,
 } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
 import { ActionCreators } from 'redux-undo';
 
 import { moveToTrash } from 'redux/slicers/favouriteSlicer';
-import AlertBox from 'components/movie-hunter/AlertBox';
+import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
+
+import AlertBox from 'components/AlertBox';
 
 import favourite from 'assets/favourite-icon.svg';
 import noImage from 'assets/no-image.jpeg';
@@ -22,17 +23,20 @@ import binImage from 'assets/bin.png';
 import helpImage from 'assets/help.png';
 import undoImage from 'assets/undo.png';
 import redoImage from 'assets/redo.png';
+import { FavMovieType } from 'helpers/sharedTypes';
 
 export default function FavMovieList() {
   const navigate = useNavigate();
-  const favMoviesList = useSelector((state) => state.reduxState.favourites);
-  const dispatch = useDispatch();
+  const favMoviesList = useAppSelector((state) => state.persistedState.favourites);
+  const dispatch = useAppDispatch();
   const [favSearch, setFavSearch] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [searchResults, setSearchResults] = useState<FavMovieType[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const multiSelect = (e, imdbID) => {
+  console.log('favMoviesList: ', favMoviesList);
+
+  const multiSelect = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, imdbID: string) => {
     if (e.ctrlKey) {
       const tempArray = [...selectedItems];
       const found = tempArray.findIndex((element) => element === imdbID);
@@ -45,13 +49,13 @@ export default function FavMovieList() {
     }
   };
 
-  const removeItemHandle = (imdbID) => {
+  const removeItemHandle = (imdbID: string) => {
     setSelectedItems((prevState) => [...prevState, imdbID]);
-    setModal(true);
+    setIsModalOpen(true);
   };
 
-  const moveItemsToTrash = (bool) => {
-    setModal(false);
+  const moveItemsToTrash = (bool: boolean) => {
+    setIsModalOpen(false);
     if (bool) {
       dispatch(moveToTrash(selectedItems));
       setSelectedItems([]);
@@ -62,12 +66,12 @@ export default function FavMovieList() {
 
   const onMultiDelete = () => {
     if (selectedItems.length > 0) {
-      setModal(true);
+      setIsModalOpen(true);
     }
   };
 
   useEffect(() => {
-    const temporaryArray = [];
+    const temporaryArray: FavMovieType[] = [];
     if (favSearch.length > 0 && favMoviesList.present.favList.length > 0) {
       favMoviesList.present.favList.forEach((item) => {
         if ((item.Title.toLowerCase().includes(favSearch.toLowerCase()) && !item.isTrash)) {
@@ -87,7 +91,7 @@ export default function FavMovieList() {
 
   useEffect(() => {
     dispatch(ActionCreators.clearHistory());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="content-section w-100">
@@ -219,7 +223,7 @@ export default function FavMovieList() {
         )) : <span className="text-danger mt-5"> No favourites found! </span>}
       </div>
       <AlertBox
-        modal={modal}
+        isModalOpen={isModalOpen}
         modalClickHandle={moveItemsToTrash}
         modalContent="Are you sure? Removed items will be moved to trash. You can undo the action by clicking the undo button."
         modalTitle="Move to trash"

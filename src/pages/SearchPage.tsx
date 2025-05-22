@@ -7,7 +7,6 @@ import React, {
 import {
   Outlet, useNavigate, useParams, Link,
 } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   UncontrolledAccordion,
   AccordionHeader,
@@ -22,14 +21,15 @@ import {
 } from 'reactstrap';
 
 import { fetchMoviesList, resetMoviesList, setPageView } from 'redux/slicers/movieSlicer';
+import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
 
 import logo from 'assets/logo.gif';
 
 export default function SearchPage() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { searchText } = useParams();
-  const movies = useSelector((state) => state.reduxState.movies);
+  const movies = useAppSelector((state) => state.persistedState.movies);
 
   const searchTextRef = useRef(null);
   const searchYearRef = useRef(null);

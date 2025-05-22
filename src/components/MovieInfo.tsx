@@ -1,24 +1,27 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Button,
   Form,
 } from 'reactstrap';
-import { useDispatch, useSelector } from 'react-redux';
+
+import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
 
 import { fetchMovieInfo } from 'redux/slicers/movieSlicer';
-import StarRating from 'components/movie-hunter/StarRating';
+import StarRating from 'components/StarRating';
 
 export default function MovieInfo() {
   const { imdbId } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const movieInfo = useSelector((state) => state.reduxState.movies.currentSelectedMovie);
-  const loader = useSelector((state) => state.reduxState.movies.isLoading);
+  const dispatch = useAppDispatch();
+  const movieInfo = useAppSelector((state) => state.persistedState.movies.currentSelectedMovie);
+  const loader = useAppSelector((state) => state.persistedState.movies.isLoading);
 
   useEffect(() => {
-    dispatch(fetchMovieInfo(imdbId));
-  }, []);
+    if (imdbId) {
+      dispatch(fetchMovieInfo(imdbId));
+    }
+  }, [dispatch, imdbId]);
 
   return (
     <div className="movie-info-section">

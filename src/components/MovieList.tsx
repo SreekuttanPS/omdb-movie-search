@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -7,42 +7,45 @@ import {
   Button,
   CardTitle,
 } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
 
 import { addToFav, removeFromFav } from 'redux/slicers/favouriteSlicer';
-import PaginationComponent from 'components/movie-hunter/PaginationComponent';
+import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
+
 import { generateRandomString } from 'helpers/utils';
+
+// import PaginationComponent from 'components/movie-hunter/PaginationComponent';
+import LoginPopup from 'components/LoginPopup';
 
 import favourite from 'assets/favourite-icon.svg';
 import notFavourite from 'assets/not-favourite.svg';
 import noImage from 'assets/no-image.jpeg';
-import LoginPopup from 'components/movie-hunter/LoginPopup';
+import { FavMovieType } from 'helpers/sharedTypes';
 
 export default function MovieList() {
   const navigate = useNavigate();
-  const movies = useSelector((state) => state.reduxState.movies);
-  const favouritesList = useSelector((state) => state.reduxState.favourites.present);
-  const [modal, setModal] = useState(false);
-  const dispatch = useDispatch();
+  const movies = useAppSelector((state) => state.persistedState.movies);
+  const favouritesList = useAppSelector((state) => state.persistedState.favourites.present);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
 
-  const addToFavhandle = (item) => {
+  const addToFavhandle = (item: FavMovieType) => {
     if (movies.isLoggedIn) {
       dispatch(addToFav(item));
     } else {
-      setModal(true);
+      setIsModalOpen(true);
     }
   };
 
-  const removeFromFavHandle = (imdbID) => {
+  const removeFromFavHandle = (imdbID: string) => {
     if (movies.isLoggedIn) {
       dispatch(removeFromFav(imdbID));
     } else {
-      setModal(true);
+      setIsModalOpen(true);
     }
   };
 
   const loginModalHandle = () => {
-    setModal(false);
+    setIsModalOpen(false);
   };
 
   return (
@@ -137,7 +140,7 @@ export default function MovieList() {
         <div className="footer-section">
           {movies.totalResults > 10 ? (
             <div className="pagination-section">
-              <PaginationComponent />
+              {/* <PaginationComponent /> */}
             </div>
           ) : ''}
         </div>
@@ -162,7 +165,7 @@ export default function MovieList() {
       )}
       <LoginPopup
         modalClickHandle={loginModalHandle}
-        modal={modal}
+        isModalOpen={isModalOpen}
       />
     </>
   );

@@ -1,76 +1,78 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import {
-  Modal, ModalHeader, ModalBody, ModalFooter, Button,
-} from 'reactstrap';
-import PropTypes from 'prop-types';
-import { LoginSocialGoogle, LoginSocialTwitter } from 'reactjs-social-login';
-import { GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons';
-import { useDispatch } from 'react-redux';
+import { useState, useCallback, useEffect } from "react";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
+// import { LoginSocialGoogle, LoginSocialTwitter } from 'reactjs-social-login';
+// import { GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons';
 
-import { setLoginInfo } from 'redux/slicers/movieSlicer';
+import { useAppDispatch } from "redux/redux-hooks";
+import { setLoginInfo } from "redux/slicers/movieSlicer";
+
+type UserProfile = {
+  name: string;
+  email: string;
+};
 
 export default function LoginPopup({
-  modal,
+  isModalOpen,
   modalClickHandle,
+}: {
+  isModalOpen: boolean;
+  modalClickHandle: () => void;
 }) {
-  const [provider, setProvider] = useState('');
-  const [googleResponse, setGoogleResponse] = useState(null);
-  const [twitterResponse, setTwitterResponse] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
-  const REDIRECT_URI = window.location.href;
-  const dispatch = useDispatch();
-
-  console.log('twitterResponse: ', twitterResponse);
+  const [provider, setProvider] = useState("");
+  const [googleResponse, setGoogleResponse] = useState<{ access_token: string } | null>(null);
+  // const [twitterResponse, setTwitterResponse] = useState(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  // const REDIRECT_URI = window.location.href;
+  const dispatch = useAppDispatch();
 
   const onLogout = useCallback(() => {
     setGoogleResponse(null);
     setUserProfile(null);
-    setProvider('');
+    setProvider("");
     modalClickHandle();
-    dispatch(setLoginInfo(
-      {
+    dispatch(
+      setLoginInfo({
         isLoggedIn: false,
-        userId: '',
-      },
-    ));
-  }, []);
+        userId: "",
+      })
+    );
+  }, [dispatch, modalClickHandle]);
 
-  async function getGoogleUserData(token) {
+  const getGoogleUserData = useCallback(async (token: string) => {
     fetch(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-    }).then((response) => response.json())
+    })
+      .then((response) => response.json())
       .then((user) => {
         setUserProfile(user);
-        dispatch(setLoginInfo(
-          {
+        dispatch(
+          setLoginInfo({
             isLoggedIn: true,
             userId: user.email,
-          },
-        ));
+          })
+        );
       });
-  }
+  }, [dispatch]);
 
   useEffect(() => {
     if (googleResponse && !userProfile) {
       getGoogleUserData(googleResponse.access_token);
     }
-  }, [googleResponse]);
+  }, [getGoogleUserData, googleResponse, userProfile]);
 
   return (
-    <Modal isOpen={modal} backdrop="static" centered>
+    <Modal isOpen={isModalOpen} backdrop="static" centered>
       <ModalHeader toggle={modalClickHandle}>Login</ModalHeader>
       <ModalBody>
-        {provider || ''}
+        {provider || ""}
         {userProfile ? (
-          <div>
-            {`Welcome ${userProfile.name} (${userProfile.email})`}
-          </div>
+          <div>{`Welcome ${userProfile.name} (${userProfile.email})`}</div>
         ) : (
           <div>
             You have to login to add items to favourites, Please login.
-            <LoginSocialGoogle
+            {/* <LoginSocialGoogle
               isOnlyGetToken
               client_id={import.meta.env.VITE_GG_AUTH_CLIENT_ID || ''}
               scope="openid profile email"
@@ -102,10 +104,8 @@ export default function LoginPopup({
               }}
             >
               <TwitterLoginButton />
-            </LoginSocialTwitter>
-
+            </LoginSocialTwitter> */}
           </div>
-
         )}
       </ModalBody>
       <ModalFooter>
@@ -118,14 +118,10 @@ export default function LoginPopup({
               Logout
             </Button>
           </div>
-
-        ) : ''}
+        ) : (
+          ""
+        )}
       </ModalFooter>
     </Modal>
   );
 }
-
-LoginPopup.propTypes = {
-  modalClickHandle: PropTypes.func.isRequired,
-  modal: PropTypes.bool.isRequired,
-};

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, JSX } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -10,26 +10,28 @@ import {
   Navbar,
   NavItem,
 } from 'reactstrap';
-import { useSelector, useDispatch } from 'react-redux';
 
 import { removeFromTrash } from 'redux/slicers/favouriteSlicer';
-import AlertBox from 'components/movie-hunter/AlertBox';
+import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
+
+import AlertBox from 'components/AlertBox';
 
 import favourite from 'assets/favourite-icon.svg';
 import noImage from 'assets/no-image.jpeg';
 import binImage from 'assets/bin.png';
 import helpImage from 'assets/help.png';
+import { FavMovieType } from 'helpers/sharedTypes';
 
-export default function Trash() {
+export default function Trash(): JSX.Element {
   const navigate = useNavigate();
-  const favMoviesList = useSelector((state) => state.reduxState.favourites.present.favList);
-  const [trashList, setTrashList] = useState([]);
-  const dispatch = useDispatch();
-  const [modal, setModal] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const favMoviesList = useAppSelector((state) => state.persistedState.favourites.present.favList);
+  const [trashList, setTrashList] = useState<FavMovieType[]>([]);
+  const dispatch = useAppDispatch();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
-  const permanentRemove = (bool) => {
-    setModal(false);
+  const permanentRemove = (bool: boolean) => {
+    setIsModalOpen(false);
     if (bool) {
       dispatch(removeFromTrash(selectedItems));
       setSelectedItems([]);
@@ -38,13 +40,13 @@ export default function Trash() {
     }
   };
 
-  const removeItem = (imdbID) => {
+  const removeItem = (imdbID: string) => {
     setSelectedItems((prevState) => [...prevState, imdbID]);
-    setModal(true);
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
-    const trash = [];
+    const trash: FavMovieType[] = [];
     favMoviesList.forEach((item) => {
       if (item.isTrash) {
         trash.push(item);
@@ -142,7 +144,7 @@ export default function Trash() {
         )) : <span className="text-danger mt-5"> Nothing in the trash! </span>}
       </div>
       <AlertBox
-        modal={modal}
+        isModalOpen={isModalOpen}
         modalClickHandle={permanentRemove}
         modalContent="Are you Sure? This cannot be undone."
         modalTitle="Remove"
