@@ -34,6 +34,7 @@ const config = [
       'react-hooks/exhaustive-deps': 'warn',
       'react/jsx-filename-extension': ['off', { extensions: ['.js', '.jsx'] }],
     },
+    ignorePatterns: [".eslintrc.config.ts", "vite.config.ts"]
   },
 ];
 

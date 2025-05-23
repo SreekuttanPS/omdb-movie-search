@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASMCINEMA</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Orbitron", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-black text-white">
+    <!-- Header -->
+    <header class="bg-black border-b border-gray-800 px-4 py-2 flex justify-between items-center">
+      <div class="text-red-600 font-bold text-xl flex items-center space-x-2">
+        <img src="/logo.svg" alt="logo" class="w-6 h-6" />
+        <span>ASMCINEMA</span>
+      </div>
+      <nav class="space-x-6 text-sm font-semibold">
+        <a href="#" class="text-white hover:text-red-500">MOVIES</a>
+        <a href="#" class="text-white hover:text-red-500">SERIES</a>
+        <a href="#" class="text-white hover:text-red-500">ACCOUNT</a>
+        <a href="#" class="text-white hover:text-red-500">PREMIUM</a>
+        <button class="bg-red-600 hover:bg-red-700 px-4 py-1 rounded">SIGN UP</button>
+      </nav>
+    </header>
+
+    <!-- Hero Banner -->
+    <section
+      class="relative text-center py-12 bg-cover bg-center"
+      style="background-image: url('/ironman-bg.jpg')"
+    >
+      <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+      <div class="relative z-10">
+        <h1 class="text-red-600 text-sm">MARVEL STUDIOS</h1>
+        <h2 class="text-4xl font-bold">IRON MAN 4</h2>
+        <p class="text-gray-400">THE NEXT NEUTRON</p>
+        <div class="mt-4 space-x-4">
+          <button class="bg-red-600 px-6 py-2 rounded hover:bg-red-700">PLAY</button>
+          <button class="bg-gray-800 px-6 py-2 rounded hover:bg-gray-700">WATCH TRAILER</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categories -->
+    <div class="flex flex-wrap justify-center space-x-4 py-4 text-xs font-bold text-white">
+      <a href="#" class="hover:text-red-500">MYSTERY</a>
+      <a href="#" class="hover:text-red-500">ACTION</a>
+      <a href="#" class="hover:text-red-500">COMEDY</a>
+      <a href="#" class="text-red-500 border-b-2 border-red-500">SCI-FI</a>
+      <a href="#" class="hover:text-red-500">HORROR</a>
+      <a href="#" class="hover:text-red-500">FANTASY</a>
+      <a href="#" class="hover:text-red-500">DRAMA</a>
+      <a href="#" class="hover:text-red-500">ROMANCE</a>
+    </div>
+
+    <!-- Movie List -->
+    <section class="px-4 py-6 max-w-5xl mx-auto">
+      <div class="text-sm text-gray-400 mb-2">Sci-Fi Movies | Design created by Aqsa Salman</div>
+      <div class="flex space-x-2 mb-6">
+        <button class="bg-gray-700 px-3 py-1 rounded-full text-xs">Recommended</button>
+        <button class="bg-gray-700 px-3 py-1 rounded-full text-xs">Most Popular</button>
+      </div>
+
+      <!-- Movie Card Template -->
+      <div class="space-y-6">
+        <!-- Movie: Interstellar -->
+        <div class="flex space-x-4">
+          <img src="/interstellar.jpg" alt="Interstellar" class="w-40 h-24 object-cover rounded" />
+          <div>
+            <h3 class="text-lg font-bold">
+              INTERSTELLAR
+              <span class="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">SCI-FI</span>
+            </h3>
+            <p class="text-sm text-gray-300">
+              A team of intergalactic explorers must pass through a wormhole and be trapped in a
+              space-time dimension...
+            </p>
+          </div>
+        </div>
+
+        <!-- Movie: Divergent -->
+        <div class="flex space-x-4">
+          <img src="/divergent.jpg" alt="Divergent" class="w-40 h-24 object-cover rounded" />
+          <div>
+            <h3 class="text-lg font-bold">
+              DIVERGENT
+              <span class="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">SCI-FI</span>
+            </h3>
+            <p class="text-sm text-gray-300">
+              In a world divided into factions based on kindness, Tris realized she was divergent
+              and wouldn’t fit anywhere...
+            </p>
+          </div>
+        </div>
+
+        <!-- Movie: Dune -->
+        <div class="flex space-x-4">
+          <img src="/dune.jpg" alt="Dune" class="w-40 h-24 object-cover rounded" />
+          <div>
+            <h3 class="text-lg font-bold">
+              DUNE
+              <span class="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">SCI-FI</span>
+            </h3>
+            <p class="text-sm text-gray-300">
+              A mythical and emotional hero's journey, Dune tells the story of Paul Atreides...
+            </p>
+          </div>
+        </div>
+
+        <!-- Movie: Gravity -->
+        <div class="flex space-x-4">
+          <img src="/gravity.jpg" alt="Gravity" class="w-40 h-24 object-cover rounded" />
+          <div>
+            <h3 class="text-lg font-bold">
+              GRAVITY
+              <span class="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">SCI-FI</span>
+            </h3>
+            <p class="text-sm text-gray-300">
+              Engineer Dr. Ryan Stone on his first mission to space. Unexpectedly, he and astronaut
+              Matt Kowalski...
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center text-sm text-gray-500 py-4 border-t border-gray-800">
+      <p>All Right Reserved &copy;2022 | ASMCINEMA | Aqsa Salman</p>
+      <p class="mt-1">Sponsored By <span class="text-white font-bold">A-SPACE</span></p>
+    </footer>
+  </body>
+</html>

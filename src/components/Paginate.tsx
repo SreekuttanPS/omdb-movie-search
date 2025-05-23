@@ -61,7 +61,7 @@ const Pagination: React.FC<PaginationProps> = ({
   const pages = createPageRange();
 
   return (
-    <nav className="pagination">
+    <nav className="flex">
       <button
         onClick={() => handleClick(currentPage - 1)}
         disabled={currentPage === 1}

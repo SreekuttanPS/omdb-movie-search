@@ -8,7 +8,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import router from './routes/Router';
 import { store, persistor } from './redux/store';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import 'css/main.css';
 
