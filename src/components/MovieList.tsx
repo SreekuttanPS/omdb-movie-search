@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
 
 import { generateRandomString } from 'helpers/utils';
 
-// import PaginationComponent from 'components/movie-hunter/PaginationComponent';
+import PaginationComponent from 'components/PaginationComponent';
 import LoginPopup from 'components/LoginPopup';
 
 import favourite from 'assets/favourite-icon.svg';
@@ -140,7 +140,7 @@ export default function MovieList() {
         <div className="footer-section">
           {movies.totalResults > 10 ? (
             <div className="pagination-section">
-              {/* <PaginationComponent /> */}
+              <PaginationComponent />
             </div>
           ) : ''}
         </div>

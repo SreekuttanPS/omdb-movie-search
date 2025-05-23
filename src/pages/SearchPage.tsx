@@ -1,12 +1,5 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-} from 'react';
-import {
-  Outlet, useNavigate, useParams, Link,
-} from 'react-router-dom';
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { Outlet, useNavigate, useParams, Link } from "react-router-dom";
 import {
   UncontrolledAccordion,
   AccordionHeader,
@@ -18,24 +11,24 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-} from 'reactstrap';
+} from "reactstrap";
 
-import { fetchMoviesList, resetMoviesList, setPageView } from 'redux/slicers/movieSlicer';
-import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
+import { fetchMoviesList, resetMoviesList, setPageView } from "redux/slicers/movieSlicer";
+import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
 
-import logo from 'assets/logo.gif';
+import logo from "assets/logo.gif";
 
 export default function SearchPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { searchText } = useParams();
+  const { searchText } = useParams<{ searchText?: string }>();
   const movies = useAppSelector((state) => state.persistedState.movies);
 
-  const searchTextRef = useRef(null);
-  const searchYearRef = useRef(null);
-  const searchTypeRef = useRef(null);
-  const scrollRef = useRef(null);
-  const [errorMessage, setErrorMessage] = useState('');
+  const searchTextRef = useRef<HTMLInputElement>(null);
+  const searchYearRef = useRef<HTMLInputElement>(null);
+  const searchTypeRef = useRef<HTMLSelectElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [favouritesPage, setFavouritesPage] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
@@ -43,25 +36,31 @@ export default function SearchPage() {
   const toggle = () => setIsOpen(!isOpen);
 
   const searchValidation = () => {
-    if (searchTextRef.current.value === '') {
-      setErrorMessage('Please enter a search text');
-    } else if (searchYearRef.current.value !== '') {
+    if (searchTextRef.current && searchTextRef.current.value === "") {
+      setErrorMessage("Please enter a search text");
+    } else if (searchYearRef.current && searchYearRef.current.value !== "") {
       if (!searchYearRef.current.validity.valid) {
-        setErrorMessage('Please enter a valid year');
+        setErrorMessage("Please enter a valid year");
       } else {
-        setErrorMessage('');
+        setErrorMessage("");
       }
     } else {
-      setErrorMessage('');
+      setErrorMessage("");
     }
   };
 
   const onSearch = useCallback(() => {
-    let searchCriterias = '';
+    let searchCriterias = "";
     searchValidation();
 
-    if (searchTextRef.current.value !== '' && searchYearRef.current.validity.valid) {
-      if (searchYearRef.current.value !== '') {
+    if (
+      searchTextRef.current &&
+      searchYearRef.current &&
+      searchTypeRef.current &&
+      searchTextRef.current.value !== "" &&
+      searchYearRef.current.validity.valid
+    ) {
+      if (searchYearRef.current.value !== "") {
         searchCriterias = `&s=${searchTextRef.current.value}&type=${searchTypeRef.current.value}&y=${searchYearRef.current.value}`;
       } else {
         searchCriterias = `&s=${searchTextRef.current.value}&type=${searchTypeRef.current.value}`;
@@ -70,69 +69,81 @@ export default function SearchPage() {
       dispatch(fetchMoviesList(searchCriterias));
       navigate(`/search/${searchTextRef.current.value}`);
     }
-  }, []);
+  }, [dispatch, navigate]);
 
-  const handleKeyUp = (event) => {
-    if (event.key === 'Enter') {
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
       searchValidation();
       onSearch();
     }
   };
 
-  const pageViewHandle = (e) => {
-    if (e.target.value === 'infinite') {
+  const pageViewHandle = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value === "infinite") {
       dispatch(setPageView(true));
     } else {
       dispatch(setPageView(false));
     }
   };
 
-  const fetchNextPage = (infiniteScroll, totalResults) => {
-    if (!executed) {
-      setExecuted(true);
-      if (infiniteScroll && pageNumber < totalResults) {
-        dispatch(fetchMoviesList(`&s=${searchText}&page=${pageNumber + 1}`));
-        setPageNumber(pageNumber + 1);
+  useEffect(() => {
+    const fetchNextPage = (infiniteScroll: boolean, totalResults: number) => {
+      if (!executed) {
+        setExecuted(true);
+        if (infiniteScroll && pageNumber < totalResults) {
+          dispatch(fetchMoviesList(`&s=${searchText}&page=${pageNumber + 1}`));
+          setPageNumber(pageNumber + 1);
+        }
       }
-    }
-  };
+    };
 
-  window.onscroll = () => {
-    if (scrollRef.current && window.location.pathname === `/search/${searchText}`) {
-      const { scrollHeight } = scrollRef.current;
-      if (window.scrollY >= scrollHeight - window.innerHeight) {
-        fetchNextPage(movies.infiniteScroll, movies.totalResults);
+    const handleScroll = () => {
+      if (scrollRef.current && window.location.pathname === `/search/${searchText}`) {
+        const { scrollHeight } = scrollRef.current;
+        if (window.scrollY >= scrollHeight - window.innerHeight) {
+          fetchNextPage(movies.infiniteScroll, movies.totalResults);
+        }
       }
-    }
-  };
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [movies.infiniteScroll, movies.totalResults, searchText, pageNumber, executed, dispatch]);
+
+  console.log('movies: ', movies);
 
   useEffect(() => {
-    setTimeout(() => {
-      setExecuted(false);
-    }, 1000);
+    if (executed) {
+      const timer = setTimeout(() => {
+        setExecuted(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
   }, [executed]);
 
   useEffect(() => {
-    if (searchText) {
-      searchTextRef.current.value = searchText;
-    } else {
-      searchTextRef.current.value = '';
+    if (searchTextRef.current) {
+      if (searchText) {
+        searchTextRef.current.value = searchText;
+      } else {
+        searchTextRef.current.value = "";
+      }
     }
   }, [searchText]);
 
   useEffect(() => {
-    if (!movies.length && searchText) {
+    if (!movies?.moviesList?.length && searchText) {
       dispatch(fetchMoviesList(`&s=${searchText}`));
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (window.location.pathname === '/favourites' || window.location.pathname === '/trash') {
+    if (window.location.pathname === "/favourites" || window.location.pathname === "/trash") {
       setFavouritesPage(true);
     } else {
       setFavouritesPage(false);
     }
-  }, [window.location.pathname]);
+  }, []);
 
   return (
     <div className="movie-search-body">
@@ -147,26 +158,34 @@ export default function SearchPage() {
               </NavbarBrand>
               <Nav className="me-auto large-dev-nav d-none d-md-block" navbar>
                 <NavItem className="navbar-item mx-2">
-                  <Link className="nav-link btn btn-outline-secondary" to="/favourites">Favourites</Link>
+                  <Link className="nav-link btn btn-outline-secondary" to="/favourites">
+                    Favourites
+                  </Link>
                 </NavItem>
                 <NavItem className="mx-2">
-                  <Link className="nav-link  btn btn-outline-secondary" to="/">Home</Link>
+                  <Link className="nav-link  btn btn-outline-secondary" to="/">
+                    Home
+                  </Link>
                 </NavItem>
               </Nav>
               <NavbarToggler className="nav-bar-toggler d-md-none" onClick={toggle} />
               <Collapse isOpen={isOpen} navbar className="d-md-none">
                 <Nav className="me-auto" navbar>
                   <NavItem>
-                    <Link className="nav-link" to="/">Home</Link>
+                    <Link className="nav-link" to="/">
+                      Home
+                    </Link>
                   </NavItem>
                   <NavItem>
-                    <Link className="nav-link" to="/favourites">Favourites</Link>
+                    <Link className="nav-link" to="/favourites">
+                      Favourites
+                    </Link>
                   </NavItem>
                 </Nav>
               </Collapse>
             </Navbar>
           </div>
-          <div className={`searchbar ${favouritesPage ? 'd-none' : ''}`}>
+          <div className={`searchbar ${favouritesPage ? "d-none" : ""}`}>
             <div className="input-section">
               <input
                 ref={searchTextRef}
@@ -186,25 +205,18 @@ export default function SearchPage() {
                 onClick={onSearch}
               >
                 {movies.isLoading ? (
-                  <span
-                    className="spinner-border spinner-border-sm mx-1"
-                    role="status"
-                  />
+                  <span className="spinner-border spinner-border-sm mx-1" role="status" />
                 ) : (
-                  ''
+                  ""
                 )}
                 Search
               </button>
             </div>
-            {errorMessage ? (
-              <span className="error-msg">{errorMessage}</span>
-            ) : (
-              ''
-            )}
+            {errorMessage ? <span className="error-msg">{errorMessage}</span> : ""}
           </div>
 
-          <div className={`advanced-search ${favouritesPage ? 'd-none' : ''}`}>
-            <UncontrolledAccordion stayOpen>
+          <div className={`advanced-search ${favouritesPage ? "d-none" : ""}`}>
+            <UncontrolledAccordion toggle={() => {}} stayOpen>
               <AccordionItem>
                 <AccordionHeader targetId="1" className="accord-header text-center">
                   Advanced search ▽
@@ -212,17 +224,17 @@ export default function SearchPage() {
                 <AccordionBody accordionId="1">
                   <div className="adv-search-criteria">
                     <div className="mt-2 advanced-select">
-                      Type :
-                      {' '}
+                      Type :{" "}
                       <select name="searchType" ref={searchTypeRef}>
-                        <option value="movie" defaultValue>Movies</option>
+                        <option value="movie" selected>
+                          Movies
+                        </option>
                         <option value="series">Series</option>
                         <option value="episode">Episodes</option>
                       </select>
                     </div>
                     <div className="mt-2">
-                      Year :
-                      {' '}
+                      Year :{" "}
                       <input
                         className="search-year"
                         type="tel"
@@ -236,9 +248,12 @@ export default function SearchPage() {
                       />
                     </div>
                     <div className="mt-2 advanced-select">
-                      View :
-                      {' '}
-                      <select name="view" onChange={pageViewHandle} defaultValue={movies.infiniteScroll ? 'infinite' : 'paginated'}>
+                      View :{" "}
+                      <select
+                        name="view"
+                        onChange={pageViewHandle}
+                        defaultValue={movies.infiniteScroll ? "infinite" : "paginated"}
+                      >
                         <option value="paginated">Paginated View</option>
                         <option value="infinite">Infinite Scroll</option>
                       </select>

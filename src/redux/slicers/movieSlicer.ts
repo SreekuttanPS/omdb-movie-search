@@ -27,7 +27,7 @@ const initialState: MoviesInitialState = {
   userId: "",
 };
 
-export const fetchMoviesList = createAsyncThunk("movies/fetchMoviesList", async (searchtexts) => {
+export const fetchMoviesList = createAsyncThunk("movies/fetchMoviesList", async (searchtexts: string) => {
   const response = await axios.get(`${baseUrl}${searchtexts}`);
   return response?.data;
 });
