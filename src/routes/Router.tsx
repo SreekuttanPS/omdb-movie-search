@@ -6,11 +6,12 @@ import MovieList from 'components/MovieList';
 import MovieInfo from 'components/MovieInfo';
 import FavMovieList from 'components/FavMovieList';
 import Trash from 'components/Trash';
+import Home from 'components/v2/Home';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <SearchPage />,
+    element: <Home />,
     errorElement: <ErrorPage />,
     children: [
       {

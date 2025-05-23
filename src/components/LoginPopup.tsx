@@ -1,127 +1,60 @@
-import { useState, useCallback, useEffect } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from "reactstrap";
-// import { LoginSocialGoogle, LoginSocialTwitter } from 'reactjs-social-login';
-// import { GoogleLoginButton, TwitterLoginButton } from 'react-social-login-buttons';
+import React from "react";
 
-import { useAppDispatch } from "redux/redux-hooks";
-import { setLoginInfo } from "redux/slicers/movieSlicer";
+interface LoginPopupProps {
+  open: boolean;
+  onDeactivate?: () => void;
+  onCancel: () => void;
+}
 
-type UserProfile = {
-  name: string;
-  email: string;
-};
-
-export default function LoginPopup({
-  isModalOpen,
-  modalClickHandle,
-}: {
-  isModalOpen: boolean;
-  modalClickHandle: () => void;
-}) {
-  const [provider, setProvider] = useState("");
-  const [googleResponse, setGoogleResponse] = useState<{ access_token: string } | null>(null);
-  // const [twitterResponse, setTwitterResponse] = useState(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  // const REDIRECT_URI = window.location.href;
-  const dispatch = useAppDispatch();
-
-  const onLogout = useCallback(() => {
-    setGoogleResponse(null);
-    setUserProfile(null);
-    setProvider("");
-    modalClickHandle();
-    dispatch(
-      setLoginInfo({
-        isLoggedIn: false,
-        userId: "",
-      })
-    );
-  }, [dispatch, modalClickHandle]);
-
-  const getGoogleUserData = useCallback(async (token: string) => {
-    fetch(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${token}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((user) => {
-        setUserProfile(user);
-        dispatch(
-          setLoginInfo({
-            isLoggedIn: true,
-            userId: user.email,
-          })
-        );
-      });
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (googleResponse && !userProfile) {
-      getGoogleUserData(googleResponse.access_token);
-    }
-  }, [getGoogleUserData, googleResponse, userProfile]);
+const LoginPopup: React.FC<LoginPopupProps> = ({ open, onDeactivate, onCancel }) => {
+  if (!open) return null;
 
   return (
-    <Modal isOpen={isModalOpen} backdrop="static" centered>
-      <ModalHeader toggle={modalClickHandle}>Login</ModalHeader>
-      <ModalBody>
-        {provider || ""}
-        {userProfile ? (
-          <div>{`Welcome ${userProfile.name} (${userProfile.email})`}</div>
-        ) : (
-          <div>
-            You have to login to add items to favourites, Please login.
-            {/* <LoginSocialGoogle
-              isOnlyGetToken
-              client_id={import.meta.env.VITE_GG_AUTH_CLIENT_ID || ''}
-              scope="openid profile email"
-              discoveryDocs="claims_supported"
-              access_type="offline"
-              fetch_basic_profile
-              onResolve={({ provide, data }) => {
-                setProvider(provide);
-                setGoogleResponse(data);
-              }}
-              onReject={(err) => {
-                setProvider(`Provider Error : ${err}`);
-              }}
-            >
-              <GoogleLoginButton />
-            </LoginSocialGoogle>
+    <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      {/* Background backdrop */}
+      <div className="fixed inset-0 bg-gray-500/75 transition-opacity" aria-hidden="true"></div>
 
-            <LoginSocialTwitter
-              isOnlyGetToken
-              client_id={import.meta.env.VITE_TWITTER_AUTH_CLIENT_ID || ''}
-              redirect_uri={REDIRECT_URI}
-              // onLoginStart={onLoginStart}
-              onResolve={({ provide, data }) => {
-                setProvider(provide);
-                setTwitterResponse(data);
-              }}
-              onReject={(err) => {
-                console.log(err);
-              }}
-            >
-              <TwitterLoginButton />
-            </LoginSocialTwitter> */}
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+          <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+              <div className="sm:flex sm:items-start">
+                <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:size-10">
+                  <svg className="size-6 text-red-600" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true" data-slot="icon">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                  </svg>
+                </div>
+                <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <h3 className="text-base font-semibold text-gray-900" id="modal-title">Deactivate account</h3>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                type="button"
+                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto"
+                onClick={onDeactivate}
+              >
+                Deactivate
+              </button>
+              <button
+                type="button"
+                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                onClick={onCancel}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-        )}
-      </ModalBody>
-      <ModalFooter>
-        {userProfile ? (
-          <div>
-            <Button className="btn btn-success mx-2" onClick={modalClickHandle}>
-              Go Back
-            </Button>
-            <Button className="btn btn-danger mx-2" onClick={onLogout}>
-              Logout
-            </Button>
-          </div>
-        ) : (
-          ""
-        )}
-      </ModalFooter>
-    </Modal>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default LoginPopup;

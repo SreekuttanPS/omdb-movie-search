@@ -1,74 +1,113 @@
-import React from "react";
+import LogoIcon from "assets/svg/LogoIcon";
+import LoginPopup from "components/LoginPopup";
+import { FavMovieType } from "helpers/sharedTypes";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
+import { addToFav, removeFromFav } from "redux/slicers/favouriteSlicer";
 
-    const movies = [
-      {
-        title: "INTERSTELLAR",
-        image: "/interstellar.jpg",
-        alt: "Interstellar",
-        description:
-          "A team of intergalactic explorers must pass through a wormhole and be trapped in a space-time dimension...",
-        genre: "SCI-FI",
-      },
-      {
-        title: "DIVERGENT",
-        image: "/divergent.jpg",
-        alt: "Divergent",
-        description:
-          "In a world divided into factions based on kindness, Tris realized she was divergent and wouldn’t fit anywhere...",
-        genre: "SCI-FI",
-      },
-      {
-        title: "DUNE",
-        image: "/dune.jpg",
-        alt: "Dune",
-        description:
-          "A mythical and emotional hero's journey, Dune tells the story of Paul Atreides...",
-        genre: "SCI-FI",
-      },
-      {
-        title: "GRAVITY",
-        image: "/gravity.jpg",
-        alt: "Gravity",
-        description:
-          "Engineer Dr. Ryan Stone on his first mission to space. Unexpectedly, he and astronaut Matt Kowalski...",
-        genre: "SCI-FI",
-      },
-    ];
+const movies = [
+  {
+    title: "INTERSTELLAR",
+    image: "/interstellar.jpg",
+    alt: "Interstellar",
+    description:
+      "A team of intergalactic explorers must pass through a wormhole and be trapped in a space-time dimension...",
+    genre: "SCI-FI",
+  },
+  {
+    title: "DIVERGENT",
+    image: "/divergent.jpg",
+    alt: "Divergent",
+    description:
+      "In a world divided into factions based on kindness, Tris realized she was divergent and wouldn't fit anywhere...",
+    genre: "SCI-FI",
+  },
+  {
+    title: "DUNE",
+    image: "/dune.jpg",
+    alt: "Dune",
+    description:
+      "A mythical and emotional hero's journey, Dune tells the story of Paul Atreides...",
+    genre: "SCI-FI",
+  },
+  {
+    title: "GRAVITY",
+    image: "/gravity.jpg",
+    alt: "Gravity",
+    description:
+      "Engineer Dr. Ryan Stone on his first mission to space. Unexpectedly, he and astronaut Matt Kowalski...",
+    genre: "SCI-FI",
+  },
+];
 
-    const MoviesList: React.FC = () => (
-      <section className="px-4 py-6 max-w-5xl mx-auto">
-        <div className="text-sm text-gray-400 mb-2">
-          Sci-Fi Movies | Design created by Aqsa Salman
-        </div>
-        <div className="flex space-x-2 mb-6">
-          <button className="bg-gray-700 px-3 py-1 rounded-full text-xs">
-            Recommended
-          </button>
-          <button className="bg-gray-700 px-3 py-1 rounded-full text-xs">
-            Most Popular
-          </button>
-        </div>
+const MoviesList: React.FC = () => {
+  const navigate = useNavigate();
+  const movies = useAppSelector((state) => state.persistedState.movies);
+  const favouritesList = useAppSelector((state) => state.persistedState.favourites.present);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const addToFavhandle = (item: FavMovieType) => {
+    if (movies.isLoggedIn) {
+      dispatch(addToFav(item));
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  const removeFromFavHandle = (imdbID: string) => {
+    if (movies.isLoggedIn) {
+      dispatch(removeFromFav(imdbID));
+    } else {
+      setIsModalOpen(true);
+    }
+  };
+
+  console.log("movies: ", movies);
+
+  const loginModalHandle = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <div className="flex items-center justify-center">
+      <section className=" mx-8 px-6 py-6 bg-[#450607]">
+        <div className="text-sm text-gray-400 mb-2">Sci-Fi Movies | Designed by Sreekuttan</div>
         <div className="space-y-6">
-          {movies.map((movie) => (
-            <div className="flex space-x-4" key={movie.title}>
-              <img
-                src={movie.image}
-                alt={movie.alt}
-                className="w-40 h-24 object-cover rounded"
-              />
-              <div>
-                <h3 className="text-lg font-bold">
-                  {movie.title}
+          {movies?.moviesList?.map((movie) => (
+            <div
+              className="my-9 justify-center items-center md:justify-start md:items-start flex flex-col md:flex-row gap-3"
+              key={movie?.Title}
+            >
+              {!movie?.Poster || movie?.Poster === "N/A" ? (
+                <div className="w-40 h-24 object-cover rounded overflow-hidden bg-black flex items-center justify-center">
+                  <LogoIcon />
+                </div>
+              ) : (
+                <img
+                  src={movie.Poster}
+                  alt={movie.Title}
+                  className="w-40 h-24 object-cover rounded overflow-hidden"
+                  loading="lazy"
+                />
+              )}
+              <div className="flex flex-col items-center md:items-start">
+                <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
+                  {movie.Title}
                   <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
-                    {movie.genre}
+                    {movie.Type?.toUpperCase()}
                   </span>
                 </h3>
-                <p className="text-sm text-gray-300">{movie.description}</p>
+                <p className="text-sm text-gray-300">{movie.Year}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
-    );
+      {/* <LoginPopup open onCancel={() => {}} /> */}
+    </div>
+  );
+};
 
-    export default MoviesList;
+export default MoviesList;

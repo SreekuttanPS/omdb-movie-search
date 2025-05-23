@@ -21,7 +21,6 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.6.0",
     "react-toastify": "^11.0.5",
-    "reactstrap": "^9.2.3",
     "redux-persist": "^6.0.0",
     "redux-undo": "^1.1.0",
     "tailwindcss": "^4.1.7",

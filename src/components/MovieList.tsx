@@ -163,10 +163,7 @@ export default function MovieList() {
         </div>
 
       )}
-      <LoginPopup
-        modalClickHandle={loginModalHandle}
-        isModalOpen={isModalOpen}
-      />
+      <LoginPopup open={isModalOpen} onCancel={loginModalHandle}/>
     </>
   );
 }

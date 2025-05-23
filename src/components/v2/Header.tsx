@@ -1,12 +1,13 @@
+import LogoIcon from "assets/svg/LogoIcon";
 import React from "react";
 
     const Header: React.FC = () => (
       <header className="bg-black border-b border-gray-800 px-4 py-2 flex justify-between items-center">
         <div className="text-red-600 font-bold text-xl flex items-center space-x-2">
-          <img src="/logo.svg" alt="logo" className="w-6 h-6" />
-          <span>ASMCINEMA</span>
+          <LogoIcon className="w-6 h-6" />
+          <span>MOVIEHUNTER</span>
         </div>
-        <nav className="space-x-6 text-sm font-semibold">
+        <nav className="space-x-6 text-sm font-semibold hidden md:block">
           <a href="#" className="text-white hover:text-red-500">MOVIES</a>
           <a href="#" className="text-white hover:text-red-500">SERIES</a>
           <a href="#" className="text-white hover:text-red-500">ACCOUNT</a>
