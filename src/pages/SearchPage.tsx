@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Outlet, useNavigate, useParams, Link } from "react-router-dom";
-import {
-  UncontrolledAccordion,
-  AccordionHeader,
-  AccordionItem,
-  AccordionBody,
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-} from "reactstrap";
+// import {
+//   UncontrolledAccordion,
+//   AccordionHeader,
+//   AccordionItem,
+//   AccordionBody,
+//   Collapse,
+//   Navbar,
+//   NavbarToggler,
+//   NavbarBrand,
+//   Nav,
+//   NavItem,
+// } from "reactstrap";
 
 import { fetchMoviesList, resetMoviesList, setPageView } from "redux/slicers/movieSlicer";
 import { useAppDispatch, useAppSelector } from "redux/redux-hooks";

@@ -1,6 +1,6 @@
-import {
-  Modal, ModalHeader, ModalBody, ModalFooter, Button,
-} from 'reactstrap';
+// import {
+//   Modal, ModalHeader, ModalBody, ModalFooter, Button,
+// } from 'reactstrap';
 
 type AlertBoxProps = {
   isModalOpen: boolean;

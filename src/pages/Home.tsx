@@ -1,17 +1,20 @@
 import React from "react";
 import Header from "components/v2/Header";
 import Categories from "components/v2/Categories";
-import MoviesList from "components/v2/MoviesList";
 import Footer from "components/v2/Footer";
-import HeroBanner from "./HeroBanner";
+import HeroBanner from "components/v2/HeroBanner";
+import { Outlet, useLocation } from "react-router-dom";
+import HomeSection from "components/v2/HomeSection";
 
 const Home: React.FC = () => {
+  const location = useLocation();
+
   return (
     <>
       <Header />
       <HeroBanner />
       <Categories />
-      <MoviesList />
+      {location.pathname === "/" ? <HomeSection /> : <Outlet context={location.pathname?.substring(1)} />}
       <Footer />
     </>
   );

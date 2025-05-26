@@ -2,7 +2,7 @@ import LogoIcon from "assets/svg/LogoIcon";
 import LoginPopup from "components/LoginPopup";
 import { FavMovieType } from "helpers/sharedTypes";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
 import { addToFav, removeFromFav } from "redux/slicers/favouriteSlicer";
 
@@ -48,6 +48,10 @@ const MoviesList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useAppDispatch();
 
+  const currentPath: string = useOutletContext();
+
+  console.log('currentPath: ', currentPath);
+
   const addToFavhandle = (item: FavMovieType) => {
     if (movies.isLoggedIn) {
       dispatch(addToFav(item));
@@ -71,37 +75,37 @@ const MoviesList: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <section className=" mx-8 px-6 py-6 bg-[#450607]">
-        <div className="text-sm text-gray-400 mb-2">Sci-Fi Movies | Designed by Sreekuttan</div>
+    <div className="flex items-center justify-center bg-blue-600 bg-[url(src/assets/images/list-bg-image.webp)] bg-blend-multiply">
+      <section className=" mx-8 px-6 py-6 bg-red-600/35">
+      {/* <section className=" mx-8 px-6 py-6 bg-[#450607]/50"> */}
+        <div className="text-sm text-gray-400 mb-2">{(currentPath || 'movies')?.toUpperCase()} | Designed by Sreekuttan</div>
         <div className="space-y-6">
           {movies?.moviesList?.map((movie) => (
-            <div
-              className="my-9 justify-center items-center md:justify-start md:items-start flex flex-col md:flex-row gap-3"
-              key={movie?.Title}
-            >
-              {!movie?.Poster || movie?.Poster === "N/A" ? (
-                <div className="w-40 h-24 object-cover rounded overflow-hidden bg-black flex items-center justify-center">
-                  <LogoIcon />
+            <Link to={`/${movie?.imdbID}/${movie.Title}/details`} key={movie?.imdbID}>
+              <div className="my-9 justify-center items-center md:justify-start md:items-start flex flex-col md:flex-row gap-3">
+                {!movie?.Poster || movie?.Poster === "N/A" ? (
+                  <div className="w-40 h-24 object-cover rounded overflow-hidden bg-black flex items-center justify-center">
+                    <LogoIcon />
+                  </div>
+                ) : (
+                  <img
+                    src={movie.Poster}
+                    alt={movie.Title}
+                    className="w-40 h-24 object-cover rounded overflow-hidden"
+                    loading="lazy"
+                  />
+                )}
+                <div className="flex flex-col items-center md:items-start">
+                  <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
+                    {movie.Title}
+                    <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
+                      {movie.Type?.toUpperCase()}
+                    </span>
+                  </h3>
+                  <p className="text-sm text-gray-300">{movie.Year}</p>
                 </div>
-              ) : (
-                <img
-                  src={movie.Poster}
-                  alt={movie.Title}
-                  className="w-40 h-24 object-cover rounded overflow-hidden"
-                  loading="lazy"
-                />
-              )}
-              <div className="flex flex-col items-center md:items-start">
-                <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
-                  {movie.Title}
-                  <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
-                    {movie.Type?.toUpperCase()}
-                  </span>
-                </h3>
-                <p className="text-sm text-gray-300">{movie.Year}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

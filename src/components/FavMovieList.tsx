@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import {
-  Card,
-  CardBody,
-  CardText,
-  Button,
-  CardTitle,
-  Nav,
-  Navbar,
-  NavItem,
-} from 'reactstrap';
+// import {
+//   Card,
+//   CardBody,
+//   CardText,
+//   Button,
+//   CardTitle,
+//   Nav,
+//   Navbar,
+//   NavItem,
+// } from 'reactstrap';
 import { ActionCreators } from 'redux-undo';
 
 import { moveToTrash } from 'redux/slicers/favouriteSlicer';

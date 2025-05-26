@@ -1,14 +1,10 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const categories = [
-  { id: 1, name: "MYSTERY" },
-  { id: 2, name: "ACTION" },
-  { id: 3, name: "COMEDY" },
-  { id: 4, name: "SCI-FI" },
-  { id: 5, name: "HORROR" },
-  { id: 6, name: "FANTASY" },
-  { id: 7, name: "DRAMA" },
-  { id: 8, name: "ROMANCE" },
+  { id: 1, name: "movie" },
+  { id: 2, name: "series" },
+  { id: 3, name: "episode" },
 ];
 
 const Categories: React.FC = () => {
@@ -16,9 +12,9 @@ const Categories: React.FC = () => {
   return (
     <div className="flex flex-wrap justify-center space-x-4 px-3 py-4 text-xs font-bold text-white font-[fantasy] gap-2">
       {categories.map((category) => (
-        <a
+        <Link
           key={category?.id}
-          href="#"
+          to={`/${category?.name}`}
           className={
             category?.id === activeCategoryId
               ? "text-white-500 bg-red-500 px-2 rounded-full"
@@ -26,8 +22,8 @@ const Categories: React.FC = () => {
           }
           onClick={() => setActiveCategoryId(category?.id)}
         >
-          {category?.name}
-        </a>
+          {category?.name?.toUpperCase()}
+        </Link>
       ))}
     </div>
   );

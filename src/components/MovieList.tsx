@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Card,
-  CardBody,
-  CardText,
-  Button,
-  CardTitle,
-} from 'reactstrap';
+// import {
+//   Card,
+//   CardBody,
+//   CardText,
+//   Button,
+//   CardTitle,
+// } from 'reactstrap';
 
 import { addToFav, removeFromFav } from 'redux/slicers/favouriteSlicer';
 import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
