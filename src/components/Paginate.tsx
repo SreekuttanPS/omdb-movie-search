@@ -4,94 +4,67 @@ interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-  pageRangeDisplayed?: number;
-  marginPagesDisplayed?: number;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-  pageRangeDisplayed = 5,
-  marginPagesDisplayed = 1,
-}) => {
+const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPageChange }) => {
   const handleClick = (page: number) => {
     if (page !== currentPage && page >= 1 && page <= totalPages) {
       onPageChange(page);
     }
   };
 
+  console.log('currentPage: ', currentPage);
+
   const createPageRange = () => {
-    const pages: (number | string)[] = [];
-
-    const startPage = Math.max(
-      currentPage - Math.floor(pageRangeDisplayed / 2),
-      marginPagesDisplayed + 1
-    );
-    const endPage = Math.min(startPage + pageRangeDisplayed - 1, totalPages - marginPagesDisplayed);
-
-    // Left margin
-    for (let i = 1; i <= marginPagesDisplayed; i++) {
-      pages.push(i);
+    if (totalPages <= 5) {
+      return new Array(totalPages).fill(0).map((_, i) => i);
+    } else {
+      let paginteArray = [1, '...', totalPages];
+      return paginteArray;
     }
-
-    if (startPage > marginPagesDisplayed + 1) {
-      pages.push("...");
-    }
-
-    // Main page range
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-
-    if (endPage < totalPages - marginPagesDisplayed) {
-      pages.push("...");
-    }
-
-    // Right margin
-    for (let i = totalPages - marginPagesDisplayed + 1; i <= totalPages; i++) {
-      if (i > marginPagesDisplayed && i > endPage) {
-        pages.push(i);
-      }
-    }
-
-    return pages;
   };
 
   const pages = createPageRange();
 
   return (
-    <nav className="flex">
-      <button
-        onClick={() => handleClick(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="pagination-button"
-      >
-        &laquo;
-      </button>
+    <div className="flex items-center justify-center z-10 gap-1">
+      {currentPage === 1 ? (
+        <button
+          onClick={() => handleClick(currentPage - 1)}
+          className="w-[35px] h-[35px] cursor-pointer rounded-full bg-red-600/50"
+        >
+          &laquo;
+        </button>
+      ) : null}
       {pages.map((page, index) =>
         typeof page === "number" ? (
           <button
             key={index}
             onClick={() => handleClick(page)}
-            className={`pagination-button ${page === currentPage ? "active" : ""}`}
+            className={`w-[35px] h-[35px] cursor-pointer rounded-full ${
+              page === currentPage ? "bg-red-600" : "bg-red-600/50"
+            }`}
           >
             {page}
           </button>
         ) : (
-          <span key={index} className="pagination-ellipsis">
+          <button
+            key={index}
+            className="w-[35px] h-[35px] cursor-pointer rounded-full bg-red-600/50"
+          >
             {page}
-          </span>
+          </button>
         )
       )}
-      <button
-        onClick={() => handleClick(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="pagination-button"
-      >
-        &raquo;
-      </button>
-    </nav>
+      {!(currentPage === totalPages) ? (
+        <button
+          onClick={() => handleClick(currentPage + 1)}
+          className="w-[35px] h-[35px] cursor-pointer rounded-full bg-red-600/50"
+        >
+          &raquo;
+        </button>
+      ) : null}
+    </div>
   );
 };
 

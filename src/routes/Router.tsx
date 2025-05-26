@@ -18,14 +18,39 @@ const router = createBrowserRouter([
       {
         path: "/movie",
         element: <MoviesList />,
+        children: [
+          {
+            path: "/movie/:searchText",
+            element: <MoviesList />,
+            children: [],
+          },
+        ],
       },
       {
         path: "/series",
         element: <MoviesList />,
+        children: [
+          {
+            path: "/series/:searchText",
+            element: <MoviesList />,
+            children: [],
+          },
+        ],
       },
       {
         path: "/episode",
         element: <MoviesList />,
+        children: [
+          {
+            path: "/episode/:searchText",
+            element: <MoviesList />,
+            children: [],
+          },
+        ],
+      },
+      {
+        path: "/info/:imdbId",
+        element: <MovieInfo />,
       },
       {
         path: "/search/:searchText",

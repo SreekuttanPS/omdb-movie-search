@@ -1,14 +1,9 @@
-import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-// import {
-//   Button,
-//   Form,
-// } from 'reactstrap';
+import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
 
-import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
-
-import { fetchMovieInfo } from 'redux/slicers/movieSlicer';
-import StarRating from 'components/StarRating';
+import { fetchMovieInfo } from "redux/slicers/movieSlicer";
+import StarRating from "components/StarRating";
 
 export default function MovieInfo() {
   const { imdbId } = useParams();
@@ -33,17 +28,11 @@ export default function MovieInfo() {
         </div>
       ) : (
         <div className="container w-100">
-          <Form className="movie-info-form">
+          <form className="movie-info-form">
             <h2>{movieInfo?.Title}</h2>
             <img className="movie-info-image" src={movieInfo?.Poster} alt="" />
             <div className="movie-info-description d-grid gap-2 d-md-block">
-              <span className="mt-3">
-                IMDb Rating :
-                {' '}
-                {movieInfo?.imdbRating}
-                {' '}
-                /10
-              </span>
+              <span className="mt-3">IMDb Rating : {movieInfo?.imdbRating} /10</span>
               {Object.keys(movieInfo).length > 0 ? (
                 <span className="w-100">
                   <StarRating
@@ -55,47 +44,28 @@ export default function MovieInfo() {
                   />
                 </span>
               ) : (
-                ''
+                ""
               )}
 
-              <span>
-                {`Release Date : ${movieInfo?.Released}`}
-              </span>
-              <span>
-                {`Time : ${movieInfo?.Runtime}`}
-              </span>
-              <span>
-                {`Genre : ${movieInfo?.Genre}`}
-              </span>
-              <span>
-                {`Director : ${movieInfo?.Director}`}
-              </span>
-              <span>
-                {`Writer(s) : ${movieInfo?.Writer}`}
-              </span>
-              <span>
-                {`Actors : ${movieInfo?.Actors}`}
-              </span>
-              <span>
-                {`Language : ${movieInfo?.Language}`}
-              </span>
-              <span>
-                {`Awards : ${movieInfo?.Awards}`}
-              </span>
-              <span>
-                {`Plot : ${movieInfo?.Plot}`}
-              </span>
+              <span>{`Release Date : ${movieInfo?.Released}`}</span>
+              <span>{`Time : ${movieInfo?.Runtime}`}</span>
+              <span>{`Genre : ${movieInfo?.Genre}`}</span>
+              <span>{`Director : ${movieInfo?.Director}`}</span>
+              <span>{`Writer(s) : ${movieInfo?.Writer}`}</span>
+              <span>{`Actors : ${movieInfo?.Actors}`}</span>
+              <span>{`Language : ${movieInfo?.Language}`}</span>
+              <span>{`Awards : ${movieInfo?.Awards}`}</span>
+              <span>{`Plot : ${movieInfo?.Plot}`}</span>
             </div>
-            <Button
+            <button
               className="m-3"
-              variant="primary"
               onClick={() => {
                 navigate(-1);
               }}
             >
-              {' Back <<'}
-            </Button>
-          </Form>
+              {" Back <<"}
+            </button>
+          </form>
         </div>
       )}
     </div>
