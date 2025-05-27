@@ -22,11 +22,10 @@
     "strict": true,
     "skipLibCheck": true,
     "rootDir": "src",
-    "baseUrl": "src",
+    "baseUrl": ".",
   },
   "include": [
-    "src",
-    "src/types/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

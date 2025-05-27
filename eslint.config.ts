@@ -1,7 +1,7 @@
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import js from "@eslint/js";
+import tseslint from "typescript-eslint";
+import reactPlugin from "eslint-plugin-react";
+import reactHooksPlugin from "eslint-plugin-react-hooks";
 
 const config = [
   js.configs.recommended,
@@ -9,32 +9,37 @@ const config = [
   {
     plugins: {
       react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
+      "react-hooks": reactHooksPlugin,
     },
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: 2020,
-        sourceType: 'module',
+        sourceType: "module",
         ecmaFeatures: {
           jsx: true,
         },
-        project: ['./tsconfig.json'],
+        project: "./tsconfig.eslint.json",
       },
     },
     settings: {
       react: {
-        version: 'detect',
+        version: "detect",
       },
     },
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ["**/*.ts", "**/*.tsx"],
     rules: {
-      'react/react-in-jsx-scope': 'off',
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      'react/jsx-filename-extension': ['off', { extensions: ['.js', '.jsx'] }],
+      "@typescript-eslint/no-explicit-any": "off",
+      "no-console": "warn",
+      "react/react-in-jsx-scope": "off",
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "react/jsx-filename-extension": ["off", { extensions: [".js", ".jsx"] }],
     },
-    ignorePatterns: [".eslintrc.config.ts", "vite.config.ts"]
+  },
+  {
+    ignores: ["eslintrc.config.ts", "vite.config.ts"],
   },
 ];
 
