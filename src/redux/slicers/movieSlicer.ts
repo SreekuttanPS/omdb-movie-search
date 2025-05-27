@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import { baseUrl } from "helpers/utils";
-import { Categories, MovieInfoType, MovieType } from "helpers/sharedTypes";
+import { Categories, MovieInfoType } from "helpers/sharedTypes";
 
 type SearchResponse = {
   Search: {
@@ -21,7 +21,6 @@ type SearchResponse = {
 type MoviesInitialState = {
   isLoading: boolean;
   moviesList: SearchResponse["Search"];
-  selectedCategory: Categories;
   selectedMovie: MovieInfoType;
   totalResults: number;
   errorText?: string;
@@ -36,7 +35,6 @@ const initialState: MoviesInitialState = {
   isLoading: false,
   moviesList: [],
   pageView: "paginate",
-  selectedCategory: "movie",
   selectedMovie: {} as MovieInfoType,
   totalResults: 0,
   errorText: "",
@@ -48,6 +46,8 @@ const initialState: MoviesInitialState = {
 export const fetchMoviesList = createAsyncThunk(
   "movies/fetchMoviesList",
   async (params?: { searchText?: string; page?: number; type?: Categories }) => {
+    console.log("hitt");
+
     // const response = await axios.get(
     //   `${baseUrl}type=${params?.type || "movies"}&s=${params?.searchText || "Spider Man"}&page=${
     //     params?.page || 1
@@ -147,6 +147,40 @@ export const fetchMoviesList = createAsyncThunk(
 );
 
 export const fetchMovieInfo = createAsyncThunk("movies/fetchMovieInfo", async (imdbID: string) => {
+  const res = {
+    Title: "Beta Test",
+    Year: "2016",
+    Rated: "Not Rated",
+    Released: "22 Jul 2016",
+    Runtime: "88 min",
+    Genre: "Action, Sci-Fi, Thriller",
+    Director: "Nicholas Gyeney",
+    Writer: "Nicholas Gyeney, André Kirkman",
+    Actors: "Manu Bennett, Larenz Tate, Linden Ashby",
+    Plot: "While testing the latest first person shooter from global game developer, Sentinel, video game champion Max Troy discovers the events happening within the game are being reflected in the real world. He soon determines that the game's protagonist is real-life Orson Creed, an ex-Sentinel employee who is being remotely controlled by the corporation for reasons unknown. As virtual and real worlds collide, Max and Creed must join forces to unravel the conspiracy before the game's sinister events escalate and overwhelm the city.",
+    Language: "English",
+    Country: "United States",
+    Awards: "N/A",
+    Poster:
+      "https://m.media-amazon.com/images/M/MV5BZjhlM2ZhMzUtMzU4ZC00ZjAyLWIxZmYtOWY4N2RlMWEzYTcwXkEyXkFqcGc@._V1_SX300.jpg",
+    Ratings: [
+      {
+        Source: "Internet Movie Database",
+        Value: "4.8/10",
+      },
+    ],
+    Metascore: "N/A",
+    imdbRating: "4.8",
+    imdbVotes: "22,113",
+    imdbID: "tt4244162",
+    Type: "movie",
+    DVD: "N/A",
+    BoxOffice: "$10,104",
+    Production: "N/A",
+    Website: "N/A",
+    Response: "True",
+  };
+  return res as MovieInfoType;
   const response = await axios.get(`${baseUrl}&i=${imdbID}`);
   return response.data;
 });
@@ -165,12 +199,6 @@ export const movieSlicer = createSlice({
       action: PayloadAction<"paginate" | "infinite_sroll">
     ) => {
       state.pageView = action.payload;
-    },
-    setSelectedCategory: (
-      state: MoviesInitialState,
-      action: PayloadAction<Categories>
-    ) => {
-      state.selectedCategory = action.payload;
     },
     setLoginInfo: (
       state: MoviesInitialState,
@@ -221,6 +249,6 @@ export const movieSlicer = createSlice({
   },
 });
 
-export const { resetMoviesList, setPageView, setLoginInfo, setSelectedCategory } = movieSlicer.actions;
+export const { resetMoviesList, setPageView, setLoginInfo } = movieSlicer.actions;
 
 export default movieSlicer.reducer;

@@ -8,18 +8,11 @@ import HomeSection from "components/v2/HomeSection";
 const Home: React.FC = () => {
   const location = useLocation();
 
-  let currentPath = 'movie';
-  if (location.pathname?.includes('/series')) {
-    currentPath = 'series';
-  } else if (location.pathname?.includes('/episode')) {
-    currentPath = 'episode';
-  }
-
   return (
     <>
       <Header />
       {!(location.pathname.includes('/info/')) ? <HeroBanner /> : null}
-      {location.pathname === "/" ? <HomeSection /> : <Outlet context={currentPath} />}
+      {location.pathname === "/" ? <HomeSection /> : <Outlet />}
       <Footer />
     </>
   );

@@ -9,8 +9,8 @@ export default function MovieInfo() {
   const { imdbId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const movieInfo = useAppSelector((state) => state.persistedState.movies.currentSelectedMovie);
-  const loader = useAppSelector((state) => state.persistedState.movies.isLoading);
+  const movieInfo = useAppSelector((state) => state?.persistedState?.movies?.selectedMovie);
+  const loader = useAppSelector((state) => state?.persistedState?.movies?.isLoading);
 
   useEffect(() => {
     if (imdbId) {
@@ -18,56 +18,58 @@ export default function MovieInfo() {
     }
   }, [dispatch, imdbId]);
 
+  console.log("movieInfo: ", movieInfo);
+
   return (
-    <div className="movie-info-section">
-      {loader ? (
-        <div className="info-loading container w-100 p-5 text-center">
-          <div className="spinner-border text-dark" role="status">
-            <span className="visually-hidden">Loading...</span>
+    <div className="flex items-center justify-center bg-blue-600 bg-[url(/src/assets/images/list-bg-image.webp)] bg-blend-multiply">
+      <div className="min-h-[89vh] text-white font-sans p-8 flex flex-col">
+        <div className="flex flex-col md:items-start items-center md:flex-row gap-12">
+          <img
+            src={movieInfo.Poster}
+            alt={movieInfo.Title}
+            className="md:w-[100vw] w-[70vw] max-w-90 object-cover rounded overflow-hidden"
+            loading="lazy"
+          />
+          <div className="mb-8 z-10">
+            <h1 className="text-5xl font-bold text-red-600 mb-2 [text-shadow:_0_0_2px_#ff0000,_0_0_10px_#ff0000]">
+              {movieInfo?.Title || "Movie Title Not Found"}
+            </h1>
+            <h2 className="text-2xl font-bold text-blue-400 [text-shadow:_0_0_2px_#00a8ff,_0_0_10px_#00a8ff]">
+              {movieInfo?.Year || "Year Not Found"}
+            </h2>
+            <p className="text-gray-300 mb-2">{movieInfo?.Plot || "Plot Not Found"}</p>
+            <div className="gap-2 hidden md:flex">
+              {movieInfo?.Genre?.split(",").map((genre) => (
+                <span className="border rounded-full px-2">{genre}</span>
+              ))}
+            </div>
+
+            <p className="text-gray-300 mt-4 md:hidden">
+              Genre: &nbsp;{movieInfo?.Genre || "Unknown Genre"}
+            </p>
+            <p className="text-gray-300 mt-4">
+              Director: &nbsp;{movieInfo?.Director || "Unknown Director"}
+            </p>
+            <p className="text-gray-300 mt-4">
+              Writers: &nbsp;{movieInfo?.Writer || "Unknown Writer"}
+            </p>
+            <p className="text-gray-300 mt-4">
+              Starring: &nbsp;{movieInfo?.Actors || "Unknown Actors"}
+            </p>
+            <p className="text-gray-300 mt-4">
+              IMDB Rating: &nbsp;{movieInfo?.Director || "Unknown Director"}
+            </p>
+            {movieInfo?.Awards && movieInfo?.Awards !== "N/A" ? (
+              <p className="text-gray-300 mt-4">Awards: {movieInfo?.Awards || "No Awards Found"}</p>
+            ) : null}
+            {movieInfo?.imdbVotes ? (
+              <p className="text-gray-300 mt-4">
+                {movieInfo?.imdbVotes}&nbsp; voted for this movie on IMDB.
+              </p>
+            ) : null}
           </div>
         </div>
-      ) : (
-        <div className="container w-100">
-          <form className="movie-info-form">
-            <h2>{movieInfo?.Title}</h2>
-            <img className="movie-info-image" src={movieInfo?.Poster} alt="" />
-            <div className="movie-info-description d-grid gap-2 d-md-block">
-              <span className="mt-3">IMDb Rating : {movieInfo?.imdbRating} /10</span>
-              {Object.keys(movieInfo).length > 0 ? (
-                <span className="w-100">
-                  <StarRating
-                    rating={movieInfo?.imdbRating}
-                    starBorderWidth={15}
-                    starBorderColor="#B67F40"
-                    fullStarColor="#FACD3A"
-                    emptyStarColor="white"
-                  />
-                </span>
-              ) : (
-                ""
-              )}
-
-              <span>{`Release Date : ${movieInfo?.Released}`}</span>
-              <span>{`Time : ${movieInfo?.Runtime}`}</span>
-              <span>{`Genre : ${movieInfo?.Genre}`}</span>
-              <span>{`Director : ${movieInfo?.Director}`}</span>
-              <span>{`Writer(s) : ${movieInfo?.Writer}`}</span>
-              <span>{`Actors : ${movieInfo?.Actors}`}</span>
-              <span>{`Language : ${movieInfo?.Language}`}</span>
-              <span>{`Awards : ${movieInfo?.Awards}`}</span>
-              <span>{`Plot : ${movieInfo?.Plot}`}</span>
-            </div>
-            <button
-              className="m-3"
-              onClick={() => {
-                navigate(-1);
-              }}
-            >
-              {" Back <<"}
-            </button>
-          </form>
-        </div>
-      )}
+      </div>
     </div>
   );
 }
