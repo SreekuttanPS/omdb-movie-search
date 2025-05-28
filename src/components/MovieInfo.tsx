@@ -30,7 +30,7 @@ export default function MovieInfo() {
         </div>
         Go Back
       </button>
-      <div className="flex items-center justify-center bg-blue-600 bg-[url(/src/assets/images/list-bg-image.webp)] bg-blend-multiply">
+      <div className="flex items-center justify-center bg-blue-600 bg-[url(images/list-bg-image.webp)] bg-blend-multiply">
         {isLoading ? (
           <div className="animate-pulse min-h-[89vh] text-white font-sans p-8 flex flex-col">
             <div className="flex flex-col md:flex-row md:items-start items-center gap-12">

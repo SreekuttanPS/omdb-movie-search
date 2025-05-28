@@ -16,31 +16,31 @@ const items: HeroBannerItem = {
   1: {
     title: "IRON MAN 4",
     content: "THE NEXT NEUTRON",
-    image: "/src/assets/images/iron-man.webp",
+    image: "images/iron-man.webp",
     link: "https://youtu.be/pXzpNnWDPxc?si=QyvJwmcHiL_LNDiO",
   },
   2: {
     title: "DOCTOR STRANGE",
     content: "MULTIVERSE OF MADNESS",
-    image: "/src/assets/images/dr-strange.webp",
+    image: "images/dr-strange.webp",
     link: "https://youtu.be/aWzlQ2N6qqg?si=7MUpGabqR25DyPHH",
   },
   3: {
     title: "BLACK PANTHER",
     content: "WAKANDA FOREVER",
-    image: "/src/assets/images/black-panther.webp",
+    image: "images/black-panther.webp",
     link: "https://youtu.be/_Z3QKkl1WyM?si=B_StmfkwA3zuknqz",
   },
   4: {
     title: "SPIDER-MAN",
     content: "INTO THE SPIDER-VERSE",
-    image: "/src/assets/images/spiderman.webp",
+    image: "images/spiderman.webp",
     link: "https://youtu.be/g4Hbz2jLxvQ?si=2Dy5pv9RShz6O_uw",
   },
   5: {
     title: "THOR",
     content: "THE DARK WORLD",
-    image: "/src/assets/images/thor.webp",
+    image: "images/thor.webp",
     link: "https://youtu.be/npvJ9FTgZbM?si=Jpbp5nK3FrhIjNq-",
   },
 };
