@@ -88,7 +88,7 @@ const MoviesList: React.FC = () => {
   return (
     <>
       <Categories />
-      <div className="flex items-center justify-center bg-blue-600 bg-[url(images/list-bg-image.webp)] bg-blend-multiply">
+      <div className="flex items-center justify-center bg-blue-600 bg-[url(/images/list-bg-image.webp)] bg-blend-multiply">
         <section className=" mx-8 px-6 py-6 bg-red-600/35 md:min-w-[85vw]">
           <div className="flex flex-col md:flex-row md:justify-between gap-4">
             <div className="text-sm text-gray-400 mb-2">Movie Hunter | Designed by Sreekuttan</div>
