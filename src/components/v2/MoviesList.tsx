@@ -10,6 +10,9 @@ import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
 import { fetchMoviesList, setCurerntPage, setSearchText } from "redux/slicers/movieSlicer";
 import InfiniteScrollToggle from "./InfiniteScrollToggle";
 import LoadingIcon from "assets/svg/LoadingIcon";
+import FavouriteIcon from "assets/svg/FavouriteIcon";
+import NotFavouriteIcon from "assets/svg/NotFavouriteIcon";
+import { addToFav, removeFromFav } from "redux/slicers/favouriteSlicer";
 // import { addToFav, removeFromFav } from "redux/slicers/favouriteSlicer";
 
 const MoviesList: React.FC = () => {
@@ -19,6 +22,9 @@ const MoviesList: React.FC = () => {
   const searchText = useAppSelector((state) => state.persistedState?.movies?.searchText);
   const isInfiniteScroll = useAppSelector(
     (state) => state.persistedState?.movies?.pageView === "infinite_sroll"
+  );
+  const favourites = useAppSelector(
+    (state) => state.persistedState?.favourites?.present?.favourites
   );
   const isLoading = useAppSelector((state) => state.persistedState?.movies?.isLoading || false);
   const totalResults = useAppSelector((state) => state.persistedState?.movies?.totalResults);
@@ -124,23 +130,43 @@ const MoviesList: React.FC = () => {
                         />
                       )}
                     </Link>
-                    <Link to={`/info/${movie?.imdbID}`}>
-                      <div className="flex flex-col items-center md:items-start">
-                        <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
-                          {movie.Title}
-                          <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
-                            {movie.Type?.toUpperCase()}
-                          </span>
-                        </h3>
-                        <p className="text-sm text-gray-300">{movie.Year}</p>
-                      </div>
-                    </Link>
+                    <div className="flex flex-col items-center md:items-start">
+                      <Link to={`/info/${movie?.imdbID}`}>
+                        <div className="flex flex-col items-center md:items-start">
+                          <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
+                            {movie.Title}
+                            <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
+                              {movie.Type?.toUpperCase()}
+                            </span>
+                          </h3>
+                          <p className="text-sm text-gray-300">{movie.Year}</p>
+                        </div>
+                      </Link>
+                      <button
+                        className="mt-4 cursor-pointer hover:scale-120 ease-in-out duration-300"
+                        onClick={() => {
+                          if (favourites?.[movie.imdbID]) {
+                            dispatch(removeFromFav(movie));
+                          } else {
+                            dispatch(addToFav(movie));
+                          }
+                        }}
+                      >
+                        {favourites?.[movie.imdbID] ? (
+                          <FavouriteIcon className="motion-safe:animate-bounce" width={25} />
+                        ) : (
+                          <NotFavouriteIcon width={25} />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           )}
-          {!isInfiniteScroll && !isLoading? <PaginationComponent className="flex justify-center" /> : null}
+          {!isInfiniteScroll && !isLoading ? (
+            <PaginationComponent className="flex justify-center" />
+          ) : null}
         </section>
         {/* <LoginPopup open onCancel={() => {}} /> */}
       </div>

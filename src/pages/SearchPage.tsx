@@ -16,7 +16,7 @@ import { Outlet, useNavigate, useParams, Link } from "react-router-dom";
 import { fetchMoviesList, resetMoviesList, setPageView } from "redux/slicers/movieSlicer";
 import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
 
-import logo from "assets/logo.gif";
+// import logo from "assets/logo.gif";
 
 export default function SearchPage() {
   const dispatch = useAppDispatch();

@@ -17,12 +17,12 @@ import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
 
 import AlertBox from 'components/AlertBox';
 
-import favourite from 'assets/favourite-icon.svg';
-import noImage from 'assets/no-image.jpeg';
-import binImage from 'assets/bin.png';
-import helpImage from 'assets/help.png';
-import undoImage from 'assets/undo.png';
-import redoImage from 'assets/redo.png';
+// import favourite from 'assets/favourite-icon.svg';
+// import noImage from 'assets/no-image.jpeg';
+// import binImage from 'assets/bin.png';
+// import helpImage from 'assets/help.png';
+// import undoImage from 'assets/undo.png';
+// import redoImage from 'assets/redo.png';
 import { FavMovieType } from 'helpers/sharedTypes';
 
 export default function FavMovieList() {

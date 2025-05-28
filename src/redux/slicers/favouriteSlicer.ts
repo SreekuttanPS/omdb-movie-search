@@ -1,58 +1,59 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FavMovieType } from "helpers/sharedTypes";
-
-interface LastRemovedItem {
-  movie: FavMovieType;
-  index: number;
-}
+import { MovieType } from "helpers/sharedTypes";
 
 interface FavouriteState {
-  favList: FavMovieType[];
-  lastRemovedItem?: LastRemovedItem[];
+  favourites: {
+    [imdbId: string]: MovieType & { isTrash: boolean };
+  };
 }
 
 const initialState: FavouriteState = {
-  favList: [],
+  favourites: {},
 };
 
 const favouriteSlicer = createSlice({
   name: "favourites",
   initialState,
   reducers: {
-    addToFav: (state, action: PayloadAction<FavMovieType>) => {
-      state.favList.push({ ...action.payload, isTrash: false });
+    addToFav: (state, action: PayloadAction<MovieType>) => {
+      if (!state.favourites?.[action.payload.imdbID]) {
+        state.favourites = {
+          ...state.favourites,
+          [action.payload.imdbID]: {
+          ...action.payload,
+          isTrash: false,
+          }
+        };
+      }
     },
-    removeFromFav: (state, action: PayloadAction<string>) => {
-      const index = state.favList.findIndex((item) => item.imdbID === action.payload);
-      if (index !== -1) {
-        state.lastRemovedItem = [
-          {
-            movie: state.favList[index],
-            index,
-          },
-        ];
-        state.favList.splice(index, 1);
+    removeFromFav: (state, action: PayloadAction<MovieType>) => {
+      if (state?.favourites?.[action?.payload?.imdbID]) {
+        delete state.favourites[action.payload.imdbID];
       }
     },
     moveToTrash: (state, action: PayloadAction<string[]>) => {
       action.payload.forEach((imdbID) => {
-        const index = state.favList.findIndex((item) => item.imdbID === imdbID);
-        if (index !== -1) {
-          state.favList[index].isTrash = true;
+        if (state.favourites[imdbID]) {
+          state.favourites[imdbID].isTrash = true;
         }
       });
     },
-    removeFromTrash: (state, action: PayloadAction<string[]>) => {
+    restoreFromTrash: (state, action: PayloadAction<string[]>) => {
       action.payload.forEach((imdbID) => {
-        const index = state.favList.findIndex((item) => item.imdbID === imdbID);
-        if (index !== -1) {
-          state.favList.splice(index, 1);
+        if (state.favourites[imdbID]) {
+          state.favourites[imdbID].isTrash = false;
         }
+      });
+    },
+    removePermanently: (state, action: PayloadAction<string[]>) => {
+      action.payload.forEach((imdbID) => {
+        delete state.favourites[imdbID];
       });
     },
   },
 });
 
-export const { addToFav, removeFromFav, moveToTrash, removeFromTrash } = favouriteSlicer.actions;
+export const { addToFav, removeFromFav, moveToTrash, restoreFromTrash, removePermanently } =
+  favouriteSlicer.actions;
 
 export default favouriteSlicer.reducer;

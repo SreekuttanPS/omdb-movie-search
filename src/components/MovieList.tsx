@@ -16,9 +16,9 @@ import { generateRandomString } from "helpers/utils";
 import PaginationComponent from "components/PaginationComponent";
 import LoginPopup from "components/LoginPopup";
 
-import favourite from "assets/favourite-icon.svg";
-import notFavourite from "assets/not-favourite.svg";
-import noImage from "assets/no-image.jpeg";
+// import favourite from "assets/favourite-icon.svg";
+// import notFavourite from "assets/not-favourite.svg";
+// import noImage from "assets/no-image.jpeg";
 import { FavMovieType } from "helpers/sharedTypes";
 
 export default function MovieList() {

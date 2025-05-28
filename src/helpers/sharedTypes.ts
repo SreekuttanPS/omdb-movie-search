@@ -43,12 +43,3 @@ export type MovieInfoType = {
   totalSeasons?: string;
   Response: "True" | "False";
 };
-
-export type FavMovieType = {
-  Title: string;
-  Year: string;
-  imdbID: string;
-  Type: CategoryType;
-  Poster: string;
-  isTrash?: boolean;
-};

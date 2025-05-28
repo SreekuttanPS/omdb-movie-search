@@ -11,15 +11,15 @@ import { useNavigate } from 'react-router-dom';
 //   NavItem,
 // } from 'reactstrap';
 
-import { removeFromTrash } from 'redux/slicers/favouriteSlicer';
+import { removePermanently } from 'redux/slicers/favouriteSlicer';
 import { useAppDispatch, useAppSelector } from 'redux/redux-hooks';
 
 import AlertBox from 'components/AlertBox';
 
-import favourite from 'assets/favourite-icon.svg';
-import noImage from 'assets/no-image.jpeg';
-import binImage from 'assets/bin.png';
-import helpImage from 'assets/help.png';
+// import favourite from 'assets/favourite-icon.svg';
+// import noImage from 'assets/no-image.jpeg';
+// import binImage from 'assets/bin.png';
+// import helpImage from 'assets/help.png';
 import { FavMovieType } from 'helpers/sharedTypes';
 
 export default function Trash(): JSX.Element {
@@ -33,7 +33,7 @@ export default function Trash(): JSX.Element {
   const permanentRemove = (bool: boolean) => {
     setIsModalOpen(false);
     if (bool) {
-      dispatch(removeFromTrash(selectedItems));
+      dispatch(removePermanently(selectedItems));
       setSelectedItems([]);
     } else {
       setSelectedItems([]);
