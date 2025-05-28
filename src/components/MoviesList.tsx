@@ -1,22 +1,27 @@
-import LogoIcon from "assets/svg/LogoIcon";
-// import LoginPopup from "components/LoginPopup";
-import PaginationComponent from "components/PaginationComponent";
-import Categories from "components/v2/Categories";
-import { useDebounce } from "hooks/useDebounce";
-// import { FavMovieType } from "helpers/sharedTypes";
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
-import { fetchMoviesList, setCurerntPage, setSearchText } from "redux/slicers/movieSlicer";
-import InfiniteScrollToggle from "./InfiniteScrollToggle";
+import { Link, useLocation } from "react-router-dom";
+
+import LogoIcon from "assets/svg/LogoIcon";
 import LoadingIcon from "assets/svg/LoadingIcon";
 import FavouriteIcon from "assets/svg/FavouriteIcon";
 import NotFavouriteIcon from "assets/svg/NotFavouriteIcon";
+
+import Categories from "components/Categories";
+import PaginationComponent from "components/PaginationComponent";
+import InfiniteScrollToggle from "components/InfiniteScrollToggle";
+
+import { useDebounce } from "hooks/useDebounce";
+
+import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
+import { fetchMoviesList, setCurerntPage, setSearchText } from "redux/slicers/movieSlicer";
 import { addToFav, removeFromFav } from "redux/slicers/favouriteSlicer";
-// import { addToFav, removeFromFav } from "redux/slicers/favouriteSlicer";
 
 const MoviesList: React.FC = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
+
+  const isFavouritesPage = location?.pathname?.includes("/favourites");
+
   const moviesList = useAppSelector((state) => state.persistedState?.movies?.moviesList);
   const currentPage = useAppSelector((state) => state.persistedState?.movies?.currentPage);
   const searchText = useAppSelector((state) => state.persistedState?.movies?.searchText);
@@ -30,32 +35,6 @@ const MoviesList: React.FC = () => {
   const totalResults = useAppSelector((state) => state.persistedState?.movies?.totalResults);
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
-
-  // const isLoggedIn = useAppSelector((state) => state.persistedState?.movies?.login?.isLoggedIn);
-
-  // const favouritesList = useAppSelector((state) => state.persistedState.favourites.present);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const dispatch = useAppDispatch();
-
-  // const addToFavhandle = (item: FavMovieType) => {
-  //   if (isLoggedIn) {
-  //     dispatch(addToFav(item));
-  //   } else {
-  //     setIsModalOpen(true);
-  //   }
-  // };
-
-  // const removeFromFavHandle = (imdbID: string) => {
-  //   if (isLoggedIn) {
-  //     dispatch(removeFromFav(imdbID));
-  //   } else {
-  //     setIsModalOpen(true);
-  //   }
-  // };
-
-  // const loginModalHandle = () => {
-  //   setIsModalOpen(false);
-  // };
 
   useEffect(() => {
     const fetchNextPage = (infiniteScroll: boolean, totalResults: number) => {
@@ -110,61 +89,66 @@ const MoviesList: React.FC = () => {
             </div>
           ) : (
             <div className="space-y-6 divide-y divide-black" ref={scrollRef}>
-              {moviesList?.map((movie) => (
-                <div key={movie?.imdbID}>
-                  <div className="my-9 justify-center items-center md:justify-start md:items-start flex flex-col md:flex-row gap-3">
-                    <Link
-                      to={`/info/${movie?.imdbID}`}
-                      className="hover:scale-110 ease-in-out duration-300"
-                    >
-                      {!movie?.Poster || movie?.Poster === "N/A" ? (
-                        <div className="w-40 h-24 object-cover rounded overflow-hidden bg-black flex items-center justify-center">
-                          <LogoIcon />
-                        </div>
-                      ) : (
-                        <img
-                          src={movie.Poster}
-                          alt={movie.Title}
-                          className="w-40 h-24 object-cover rounded overflow-hidden"
-                          loading="lazy"
-                        />
-                      )}
-                    </Link>
-                    <div className="flex flex-col items-center md:items-start">
-                      <Link to={`/info/${movie?.imdbID}`}>
-                        <div className="flex flex-col items-center md:items-start">
-                          <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
-                            {movie.Title}
-                            <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
-                              {movie.Type?.toUpperCase()}
-                            </span>
-                          </h3>
-                          <p className="text-sm text-gray-300">{movie.Year}</p>
-                        </div>
-                      </Link>
-                      <button
-                        className="mt-4 cursor-pointer hover:scale-120 ease-in-out duration-300"
-                        onClick={() => {
-                          if (favourites?.[movie.imdbID]) {
-                            dispatch(removeFromFav(movie));
-                          } else {
-                            dispatch(addToFav(movie));
-                          }
-                        }}
+              {moviesList?.map((movie) => {
+                if (isFavouritesPage && !favourites?.[movie.imdbID]) {
+                  return null; // Skip if not in favourites
+                }
+                return (
+                  <div key={movie?.imdbID}>
+                    <div className="my-9 justify-center items-center md:justify-start md:items-start flex flex-col md:flex-row gap-3">
+                      <Link
+                        to={`/info/${movie?.imdbID}`}
+                        className="hover:scale-110 ease-in-out duration-300"
                       >
-                        {favourites?.[movie.imdbID] ? (
-                          <FavouriteIcon className="motion-safe:animate-bounce" width={25} />
+                        {!movie?.Poster || movie?.Poster === "N/A" ? (
+                          <div className="w-40 h-24 object-cover rounded overflow-hidden bg-black flex items-center justify-center">
+                            <LogoIcon />
+                          </div>
                         ) : (
-                          <NotFavouriteIcon width={25} />
+                          <img
+                            src={movie.Poster}
+                            alt={movie.Title}
+                            className="w-40 h-24 object-cover rounded overflow-hidden"
+                            loading="lazy"
+                          />
                         )}
-                      </button>
+                      </Link>
+                      <div className="flex flex-col items-center md:items-start">
+                        <Link to={`/info/${movie?.imdbID}`}>
+                          <div className="flex flex-col items-center md:items-start">
+                            <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
+                              {movie.Title}
+                              <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
+                                {movie.Type?.toUpperCase()}
+                              </span>
+                            </h3>
+                            <p className="text-sm text-gray-300">{movie.Year}</p>
+                          </div>
+                        </Link>
+                        <button
+                          className="mt-4 cursor-pointer hover:scale-120 ease-in-out duration-300"
+                          onClick={() => {
+                            if (favourites?.[movie.imdbID]) {
+                              dispatch(removeFromFav(movie));
+                            } else {
+                              dispatch(addToFav(movie));
+                            }
+                          }}
+                        >
+                          {favourites?.[movie.imdbID] ? (
+                            <FavouriteIcon className="motion-safe:animate-bounce" width={25} />
+                          ) : (
+                            <NotFavouriteIcon width={25} />
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
-          {!isInfiniteScroll && !isLoading ? (
+          {!isInfiniteScroll && !isLoading && !isFavouritesPage ? (
             <PaginationComponent className="flex justify-center" />
           ) : null}
         </section>

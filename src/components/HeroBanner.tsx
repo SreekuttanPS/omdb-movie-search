@@ -1,7 +1,4 @@
-import NextIcon from "assets/svg/NextIcon";
-import PlayIcon from "assets/svg/PlayIcon";
-import PreviosIcon from "assets/svg/PreviosIcon";
-import { useRef, useState, useEffect, JSX } from "react";
+import { useState, useEffect, JSX } from "react";
 
 type HeroBannerItem = {
   [key: number]: {

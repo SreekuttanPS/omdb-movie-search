@@ -1,6 +1,6 @@
 import LogoIcon from "assets/svg/LogoIcon";
 import React from "react";
-import Categories from "components/v2/Categories";
+import Categories from "components/Categories";
 
 const HomeSection: React.FC = () => {
   return (

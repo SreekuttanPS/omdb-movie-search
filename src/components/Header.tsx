@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
           <span>MOVIEHUNTER</span>
         </Link>
         <div className="space-x-6 text-sm font-semibold hidden md:block">
-          <Link to="/" className="inline-block text-white hover:text-red-500 hover:scale-105 ease-in-out duration-300">FAVOURITES</Link>
+          <Link to="/favourites" className="inline-block text-white hover:text-red-500 hover:scale-105 ease-in-out duration-300">FAVOURITES</Link>
           <button className="bg-red-600 hover:bg-red-700 px-4 py-1 rounded">SIGN UP</button>
         </div>
       </header>

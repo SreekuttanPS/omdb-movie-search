@@ -1,13 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import SearchPage from "pages/SearchPage";
 import ErrorPage from "pages/ErrorPage";
-import MovieList from "components/MovieList";
 import MovieInfo from "components/MovieInfo";
-import FavMovieList from "components/FavMovieList";
 import Trash from "components/Trash";
 import Home from "pages/Home";
-import MoviesList from "components/v2/MoviesList";
+import MoviesList from "components/MoviesList";
 
 const router = createBrowserRouter([
   {
@@ -53,23 +50,14 @@ const router = createBrowserRouter([
         element: <MovieInfo />,
       },
       {
-        path: "/search/:searchText",
-        element: <MovieList />,
-      },
-      {
         path: "/favourites",
-        element: <FavMovieList />,
+        element: <MoviesList />,
       },
       {
         path: "/trash",
         element: <Trash />,
       },
     ],
-  },
-  {
-    path: "/search",
-    element: <SearchPage />,
-    errorElement: <ErrorPage />,
   },
 ]);
 
