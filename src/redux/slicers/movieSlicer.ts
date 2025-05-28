@@ -50,7 +50,7 @@ const initialState: MoviesInitialState = {
 export const fetchMoviesList = createAsyncThunk(
   "movies/fetchMoviesList",
   async (params?: { searchText?: string; page?: number; type?: CategoryType }) => {
-    console.log("hitt");
+    console.log("hit params: ", params);
 
     // const response = await axios.get(
     //   `${baseUrl}type=${params?.type || "movies"}&s=${params?.searchText || "Spider Man"}&page=${

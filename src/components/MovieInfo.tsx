@@ -19,13 +19,11 @@ export default function MovieInfo() {
     }
   }, [dispatch, imdbId]);
 
-  console.log("movieInfo: ", movieInfo);
-
   return (
     <>
       <button
         onClick={() => navigate(-1)}
-        className="flex border border-red-600 mt-3 ms-2 py-1 px-2 hover:scale-110 hover:border-red-900 rounded-full cursor-pointer"
+        className="flex border border-red-600 mt-3 ms-2 py-1 px-2 hover:scale-115 ease-in-out duration-500 rounded-full cursor-pointer"
       >
         <div className="animate-bounce rotate-90 me-2">
           <PreviosIcon width={15} className="rotate-270" />
