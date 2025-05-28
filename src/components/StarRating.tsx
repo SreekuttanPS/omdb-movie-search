@@ -1,5 +1,5 @@
-import React from 'react';
-import { generateRandomString } from 'helpers/utils';
+import React from "react";
+import { generateRandomString } from "helpers/utils";
 
 interface StarProps {
   fullStarColor: string;
@@ -18,7 +18,7 @@ const Star: React.FC<StarProps> = ({
   starBorderWidth,
   id,
 }) => (
-  <svg height="30" width="35" viewBox="0 0 200 300">
+  <svg height="25" width="25" viewBox="0 0 150 250">
     <defs>
       <linearGradient id={id}>
         <stop offset="0%" stopColor={fullStarColor} />
@@ -36,31 +36,31 @@ const Star: React.FC<StarProps> = ({
 
 interface StarRatingProps {
   rating: number | string;
-  emptyStarColor: string;
-  fullStarColor: string;
-  starBorderWidth: number | string;
-  starBorderColor: string;
+  emptyStarColor?: string;
+  fullStarColor?: string;
+  starBorderWidth?: number | string;
+  starBorderColor?: string;
 }
 
 const StarRating: React.FC<StarRatingProps> = ({
   rating,
-  emptyStarColor,
-  fullStarColor,
-  starBorderWidth,
-  starBorderColor,
+  emptyStarColor = "white",
+  fullStarColor = "#FACD3A",
+  starBorderWidth = 15,
+  starBorderColor = "#B67F40",
 }) => {
   const svgRating = Number(rating) / 2;
   const finalStarCount = Math.floor(svgRating);
   const halfStarPercentage = (svgRating % 1).toFixed(2).substring(2);
 
-  const starArray = ['0', '0', '0', '0', '0'];
-  starArray.fill('100', 0, finalStarCount);
+  const starArray = ["0", "0", "0", "0", "0"];
+  starArray.fill("100", 0, finalStarCount);
   if (finalStarCount < 5 && Number(halfStarPercentage) > 0) {
     starArray.fill(halfStarPercentage, finalStarCount, finalStarCount + 1);
   }
 
   return (
-    <>
+    <div className="flex">
       {starArray.map((value, idx) => (
         <Star
           key={generateRandomString()}
@@ -72,7 +72,7 @@ const StarRating: React.FC<StarRatingProps> = ({
           starBorderWidth={starBorderWidth}
         />
       ))}
-    </>
+    </div>
   );
 };
 

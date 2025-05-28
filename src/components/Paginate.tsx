@@ -23,8 +23,6 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onPage
     }
   };
 
-  console.log("currentPage: ", currentPage);
-
   return (
     <div className="flex items-center justify-center z-10 gap-2 bg-red-600/70 px-1 rounded-md shadow-xl">
       <select

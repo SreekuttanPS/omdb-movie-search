@@ -3,14 +3,14 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 import { baseUrl } from "helpers/utils";
-import { Categories, MovieInfoType } from "helpers/sharedTypes";
+import { CategoryType, MovieInfoType } from "helpers/sharedTypes";
 
 type SearchResponse = {
   Search: {
     Title: string;
     Year: string;
     imdbID: string;
-    Type: Categories;
+    Type: CategoryType;
     Poster: string;
   }[];
   totalResults: string;
@@ -22,6 +22,8 @@ type MoviesInitialState = {
   isLoading: boolean;
   moviesList: SearchResponse["Search"];
   selectedMovie: MovieInfoType;
+  currentPage: number;
+  searchText: string;
   totalResults: number;
   errorText?: string;
   pageView: "paginate" | "infinite_sroll";
@@ -38,6 +40,8 @@ const initialState: MoviesInitialState = {
   selectedMovie: {} as MovieInfoType,
   totalResults: 0,
   errorText: "",
+  currentPage: 1,
+  searchText: "",
   login: {
     isLoggedIn: false,
   },
@@ -45,7 +49,7 @@ const initialState: MoviesInitialState = {
 
 export const fetchMoviesList = createAsyncThunk(
   "movies/fetchMoviesList",
-  async (params?: { searchText?: string; page?: number; type?: Categories }) => {
+  async (params?: { searchText?: string; page?: number; type?: CategoryType }) => {
     console.log("hitt");
 
     // const response = await axios.get(
@@ -200,6 +204,12 @@ export const movieSlicer = createSlice({
     ) => {
       state.pageView = action.payload;
     },
+    setCurerntPage: (state: MoviesInitialState, action: PayloadAction<number>) => {
+      state.currentPage = action.payload;
+    },
+    setSearchText: (state: MoviesInitialState, action: PayloadAction<string>) => {
+      state.searchText = action.payload;
+    },
     setLoginInfo: (
       state: MoviesInitialState,
       action: PayloadAction<{ isLoggedIn: boolean; userName: string }>
@@ -249,6 +259,6 @@ export const movieSlicer = createSlice({
   },
 });
 
-export const { resetMoviesList, setPageView, setLoginInfo } = movieSlicer.actions;
+export const { resetMoviesList, setPageView, setLoginInfo, setCurerntPage, setSearchText } = movieSlicer.actions;
 
 export default movieSlicer.reducer;

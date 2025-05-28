@@ -19,7 +19,6 @@ const config = [
         ecmaFeatures: {
           jsx: true,
         },
-        project: "./tsconfig.eslint.json",
       },
     },
     settings: {

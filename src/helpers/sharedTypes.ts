@@ -1,10 +1,10 @@
-export type Categories = "movie" | "series" | "episode";
+export type CategoryType = "movie" | "series" | "episode";
 
 export type MovieType = {
   Title: string;
   Year: string;
   imdbID: string;
-  Type: Categories;
+  Type: CategoryType;
   Poster: string;
 };
 
@@ -39,7 +39,7 @@ export type MovieInfoType = {
   imdbRating: string;
   imdbVotes: string;
   imdbID: string;
-  Type: Categories;
+  Type: CategoryType;
   totalSeasons?: string;
   Response: "True" | "False";
 };
@@ -48,7 +48,7 @@ export type FavMovieType = {
   Title: string;
   Year: string;
   imdbID: string;
-  Type: Categories;
+  Type: CategoryType;
   Poster: string;
   isTrash?: boolean;
 };

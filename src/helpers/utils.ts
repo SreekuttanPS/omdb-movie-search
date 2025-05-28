@@ -10,5 +10,7 @@ export const getCurrentPath = (pathname: string) => {
     return "series";
   } else if (pathname?.includes("/episode")) {
     return "episode";
-  } else return "movie";
+  } else if (pathname?.includes("/movie")) {
+    return "movie";
+  } else return "";
 };
