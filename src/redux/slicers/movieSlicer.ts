@@ -52,11 +52,11 @@ export const fetchMoviesList = createAsyncThunk(
   async (params?: { searchText?: string; page?: number; type?: CategoryType }) => {
     console.log("hit params: ", params);
 
-    // const response = await axios.get(
-    //   `${baseUrl}type=${params?.type || "movies"}&s=${params?.searchText || "Spider Man"}&page=${
-    //     params?.page || 1
-    //   }`
-    // );
+    const response = await axios.get(
+      `${baseUrl}type=${params?.type || "movies"}&s=${params?.searchText || "Spider Man"}&page=${
+        params?.page || 1
+      }`
+    );
 
     const res = {
       Search: [
@@ -230,7 +230,7 @@ export const movieSlicer = createSlice({
           state.totalResults = action?.payload?.totalResults
             ? Number(action.payload.totalResults)
             : 0;
-          if (state.pageView === "infinite_sroll") {
+          if (state.pageView === "infinite_sroll" && state.currentPage > 1) {
             state.moviesList = state.moviesList.concat(action.payload.Search);
           } else {
             state.moviesList = action.payload.Search;

@@ -1,20 +1,16 @@
 import React, { useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
-import LogoIcon from "assets/svg/LogoIcon";
 import LoadingIcon from "assets/svg/LoadingIcon";
-import FavouriteIcon from "assets/svg/FavouriteIcon";
-import NotFavouriteIcon from "assets/svg/NotFavouriteIcon";
 
 import Categories from "components/Categories";
 import PaginationComponent from "components/PaginationComponent";
 import InfiniteScrollToggle from "components/InfiniteScrollToggle";
-
-import { useDebounce } from "hooks/useDebounce";
+import MovieCard from "components/MovieCard";
+import SearchBar from "components/SearchBar";
 
 import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
-import { fetchMoviesList, setCurerntPage, setSearchText } from "redux/slicers/movieSlicer";
-import { addToFav, removeFromFav } from "redux/slicers/favouriteSlicer";
+import { fetchMoviesList, setCurerntPage } from "redux/slicers/movieSlicer";
 
 const MoviesList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -56,98 +52,38 @@ const MoviesList: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [searchText, currentPage, dispatch, isInfiniteScroll, totalResults]);
 
-  const handleInput = (val: string) => {
-    dispatch(setSearchText(val));
-  };
-
-  const debouncedFetch = useDebounce((val: string) => {
-    dispatch(fetchMoviesList({ page: 1, searchText: val.trim() }));
-  }, 300);
-
   return (
     <>
       <Categories />
       <div className="flex items-center justify-center bg-blue-600 bg-[url(/images/list-bg-image.webp)] bg-blend-multiply">
-        <section className=" mx-8 px-6 py-6 bg-red-600/35 md:min-w-[85vw]">
+        <section className=" mx-8 px-6 py-6 bg-red-600/35 md:min-w-[85vw]"  ref={scrollRef}>
           <div className="flex flex-col md:flex-row md:justify-between gap-4">
             <div className="text-sm text-gray-400 mb-2">Movie Hunter | Designed by Sreekuttan</div>
-            <input
-              type="text"
-              value={searchText}
-              placeholder="Search..."
-              onChange={(e) => {
-                handleInput(e.target.value);
-                debouncedFetch(e.target.value);
-              }}
-              className="w-full md:w-[30%] border border-red-300 px-3 py-2 rounded-xl hover:scale-105 focus:scale-105 ease-in-out duration-600 focus:outline-none focus:border-red-700 text-center"
-            />
-            <InfiniteScrollToggle isInfiniteScroll={isInfiniteScroll} />
+            {!isFavouritesPage && (
+              <>
+                <SearchBar />
+                <InfiniteScrollToggle isInfiniteScroll={isInfiniteScroll} />
+              </>
+            )}
           </div>
-          {isLoading ? (
-            <div className="flex items-center justify-center h-[15vh] md:h-[45vh]" ref={scrollRef}>
+          {isLoading && !isInfiniteScroll ? (
+            <div className="flex items-center justify-center h-[15vh] md:h-[45vh]">
               <LoadingIcon className="animate-spin" />
             </div>
           ) : (
-            <div className="space-y-6 divide-y divide-black" ref={scrollRef}>
-              {moviesList?.map((movie) => {
-                if (isFavouritesPage && !favourites?.[movie.imdbID]) {
-                  return null; // Skip if not in favourites
-                }
-                return (
-                  <div key={movie?.imdbID}>
-                    <div className="my-9 justify-center items-center md:justify-start md:items-start flex flex-col md:flex-row gap-3">
-                      <Link
-                        to={`/info/${movie?.imdbID}`}
-                        className="hover:scale-110 ease-in-out duration-300"
-                      >
-                        {!movie?.Poster || movie?.Poster === "N/A" ? (
-                          <div className="w-40 h-24 object-cover rounded overflow-hidden bg-black flex items-center justify-center">
-                            <LogoIcon />
-                          </div>
-                        ) : (
-                          <img
-                            src={movie.Poster}
-                            alt={movie.Title}
-                            className="w-40 h-24 object-cover rounded overflow-hidden"
-                            loading="lazy"
-                          />
-                        )}
-                      </Link>
-                      <div className="flex flex-col items-center md:items-start">
-                        <Link to={`/info/${movie?.imdbID}`}>
-                          <div className="flex flex-col items-center md:items-start">
-                            <h3 className="text-lg font-bold flex flex-col md:flex-row items-center">
-                              {movie.Title}
-                              <span className="bg-red-600 text-white text-xs px-2 py-0.5 rounded ml-2">
-                                {movie.Type?.toUpperCase()}
-                              </span>
-                            </h3>
-                            <p className="text-sm text-gray-300">{movie.Year}</p>
-                          </div>
-                        </Link>
-                        <button
-                          className="mt-4 cursor-pointer hover:scale-120 ease-in-out duration-300"
-                          onClick={() => {
-                            if (favourites?.[movie.imdbID]) {
-                              dispatch(removeFromFav(movie));
-                            } else {
-                              dispatch(addToFav(movie));
-                            }
-                          }}
-                        >
-                          {favourites?.[movie.imdbID] ? (
-                            <FavouriteIcon className="motion-safe:animate-bounce" width={25} />
-                          ) : (
-                            <NotFavouriteIcon width={25} />
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="space-y-6 divide-y divide-black">
+              {isFavouritesPage
+                ? Object.values(favourites || {}).map((favouriteMovie) => (
+                    <MovieCard movie={favouriteMovie} key={favouriteMovie?.imdbID} />
+                  ))
+                : moviesList?.map((movie) => <MovieCard movie={movie} key={movie?.imdbID} />)}
             </div>
           )}
+          {isLoading ? (
+            <div className="flex items-center justify-center h-[15vh] md:h-[45vh]">
+              <LoadingIcon className="animate-spin" />
+            </div>
+          ) : (null)}
           {!isInfiniteScroll && !isLoading && !isFavouritesPage ? (
             <PaginationComponent className="flex justify-center" />
           ) : null}
