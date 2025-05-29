@@ -11,6 +11,7 @@ import SearchBar from "components/SearchBar";
 
 import { useAppDispatch, useAppSelector } from "redux/redux-hooks";
 import { fetchMoviesList, setCurerntPage } from "redux/slicers/movieSlicer";
+import { isEmpty } from "helpers/utils";
 
 const MoviesList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -32,9 +33,10 @@ const MoviesList: React.FC = () => {
 
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
+
   useEffect(() => {
     const fetchNextPage = (infiniteScroll: boolean, totalResults: number) => {
-      if (infiniteScroll && currentPage < totalResults) {
+      if (infiniteScroll && currentPage < (Math.ceil(totalResults / 10))) {
         dispatch(fetchMoviesList({ page: currentPage + 1, searchText }));
         dispatch(setCurerntPage(currentPage + 1));
       }
@@ -56,7 +58,7 @@ const MoviesList: React.FC = () => {
     <>
       <Categories />
       <div className="flex items-center justify-center bg-blue-600 bg-[url(/images/list-bg-image.webp)] bg-blend-multiply">
-        <section className=" mx-8 px-6 py-6 bg-red-600/35 md:min-w-[85vw]"  ref={scrollRef}>
+        <section className=" mx-8 px-6 py-6 bg-red-600/35 md:min-w-[85vw]" ref={scrollRef}>
           <div className="flex flex-col md:flex-row md:justify-between gap-4">
             <div className="text-sm text-gray-400 mb-2">Movie Hunter | Designed by Sreekuttan</div>
             {!isFavouritesPage && (
@@ -79,12 +81,23 @@ const MoviesList: React.FC = () => {
                 : moviesList?.map((movie) => <MovieCard movie={movie} key={movie?.imdbID} />)}
             </div>
           )}
+          {isFavouritesPage && isEmpty(favourites) ? (
+            <div className="flex items-center justify-center h-[15vh] md:h-[45vh]">
+              <div className="text-gray-400">No favourites found!</div>
+            </div>
+          ) : null}
+          {!isFavouritesPage && isEmpty(moviesList) && !isLoading ? (
+            <div className="flex items-center justify-center h-[15vh] md:h-[45vh]">
+              <div className="text-gray-400">No movies found!</div>
+            </div>
+          ) : null}
           {isLoading ? (
             <div className="flex items-center justify-center h-[15vh] md:h-[45vh]">
               <LoadingIcon className="animate-spin" />
             </div>
-          ) : (null)}
-          {!isInfiniteScroll && !isLoading && !isFavouritesPage ? (
+          ) : null}
+          {/* Show pagination only if not in infinite scroll mode */}
+          {!isInfiniteScroll && !isLoading && !isFavouritesPage && !isEmpty(moviesList) ? (
             <PaginationComponent className="flex justify-center" />
           ) : null}
         </section>

@@ -14,3 +14,17 @@ export const getCurrentPath = (pathname: string) => {
     return "movie";
   } else return "";
 };
+
+export const isEmpty = (value: any): boolean => {
+  if (value == null) return true; // null or undefined
+
+  if (typeof value === "string" || Array.isArray(value)) {
+    return value.length === 0;
+  }
+
+  if (typeof value === "object") {
+    return Object.keys(value).length === 0;
+  }
+
+  return false; // numbers, booleans, functions, etc. aren't considered "empty"
+}
